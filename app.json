@@ -12,16 +12,29 @@
     "en": "Ambient Weather"
   },
   "description": {
-    "en": "Use your Ambient weather station data in Homey."
+    "en": "Use your Ambient weather station data and Homey to react to that storm or heatwave."
   },
   "category": [
     "climate"
   ],
   "permissions": [],
+  "support": "https://github.com/AdyRock/com.ambient.weather/issues",
+  "homepage": "https://ambientweather.com//",
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "adyrock"
+      }
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/AdyRock/com.ambient.weather/issues"
+  },
+  "source": "https://github.com/AdyRock/com.ambient.weather",
+  "homeyCommunityTopicId": 55499,
   "images": {
-    "small": "/assets/images/small.png",
-    "large": "/assets/images/large.png",
-    "xlarge": "/assets/images/xlarge.png"
+    "small": "/assets/images/small.jpg",
+    "large": "/assets/images/large.jpg"
   },
   "author": {
     "name": "Adrian Rockall",
@@ -2417,18 +2430,18 @@
         "en": "Lightning Detector"
       },
       "class": "sensor",
-      "capabilities": [
-        "measure_lightning",
-        "measure_lightning_num",
-        "measure_lightning_time",
-        "alarm_battery"
-      ],
       "energy": {
         "batteries": [
           "AA",
           "AA"
         ]
       },
+      "capabilities": [
+        "measure_lightning",
+        "measure_lightning_num",
+        "measure_lightning_time",
+        "alarm_battery"
+      ],
       "settings": [
         {
           "id": "timeFormat",
@@ -2636,6 +2649,12 @@
         "en": "Station"
       },
       "class": "other",
+      "energy": {
+        "batteries": [
+          "AA",
+          "AA"
+        ]
+      },
       "capabilities": [
         "measure_temperature",
         "measure_temperature.feelsLike",

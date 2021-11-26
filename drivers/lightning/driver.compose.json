@@ -3,18 +3,18 @@
         "en": "Lightning Detector"
     },
     "class": "sensor",
-    "capabilities": [
-        "measure_lightning",
-        "measure_lightning_num",
-        "measure_lightning_time",
-        "alarm_battery"
-    ],
     "energy": {
         "batteries": [
             "AA",
             "AA"
         ]
     },
+    "capabilities": [
+        "measure_lightning",
+        "measure_lightning_num",
+        "measure_lightning_time",
+        "alarm_battery"
+    ],
     "settings": [
         {
             "id": "timeFormat",
