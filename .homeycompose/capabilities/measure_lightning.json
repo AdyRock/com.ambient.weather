@@ -1,0 +1,13 @@
+{
+    "type": "number",
+    "title": {
+        "en": "Lightning Distance"
+    },
+    "units": {
+        "en": "km"
+    },
+    "getable": true,
+    "setable": false,
+    "insights": true,
+    "icon": "/assets/lightning_distance.svg"
+}

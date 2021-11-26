@@ -1,0 +1,10 @@
+{
+    "type": "number",
+    "title": {
+        "en": "Daily Count"
+    },
+    "getable": true,
+    "setable": false,
+    "insights": true,
+    "icon": "/assets/lightning_count.svg"
+}

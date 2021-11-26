@@ -1,0 +1,17 @@
+{
+    "name": {
+        "en": "Soil Moisture"
+    },
+    "class": "sensor",
+    "capabilities": [
+        "alarm_battery",
+        "measure_moisture",
+        "measure_temperature"
+    ],
+    "energy": {
+        "batteries": [
+            "AA"
+        ]
+    },
+    "$extends": ["globalCompose"]
+}

@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <!-- SETTINGS PAGE -->
+    <div id="settings">
+
+        <pSettings>
+            </p>
+            <div style="text-align: center;">
+                <img src="logo.png" alt="LinkTap">
+                <p style="font-size:25px">Ambient Weather</p>
+            </div>
+
+            <fieldset>
+                <legend data-i18n="title"></legend>
+                <div class="field row">
+                    <label for="apiKey" data-i18n="apiKey"></label>
+                    <input id="apiKey" type="text" value="" />
+                </div>
+            </fieldset>
+            <p><button id="save" class="right" data-i18n="addStation"></button></p>
+            </fieldset>
+    </div>
+
+    <script type="text/javascript">
+        var apiKeyElement = document.getElementById('apiKey');
+        var saveElement = document.getElementById('save');
+
+        // Tell Homey we're ready to be displayed
+        Homey.ready();
+        Homey.emit('connection_setup', {}).then(function(result)
+        {
+            document.getElementById('apiKey').value = result.apiKey;
+        });
+
+        saveElement.addEventListener('click', function(e)
+        {
+            if (apiKeyElement.value === "")
+            {
+                return Homey.alert(Homey.__("apiKeyRequired"));
+            }
+
+            Homey.showLoadingOverlay();
+
+            var settings = {
+                apiKey: apiKeyElement.value
+            };
+            Homey.emit('validate', settings).then(function(result)
+            {
+                Homey.hideLoadingOverlay();
+                if (!result.ok)
+                {
+                    Homey.alert(result.err);
+                }
+                else
+                {
+                    Homey.done();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

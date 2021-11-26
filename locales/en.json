@@ -1,0 +1,12 @@
+{
+    "title": "Your Ambient Account Information.",
+    "apiKey": "API KEY",
+    "apiKeyRequired": "API Key is required",
+    "addStation": "Next",
+    "good": "Good",
+    "Moderate": "Moderate",
+    "UnhealthyLo": "Slightly Unhealthy",
+    "Unhealthy": "Unhealthy",
+    "UnhealthyHi": "Very Unhealthy",
+    "Hazardous": "Hazardous"
+}

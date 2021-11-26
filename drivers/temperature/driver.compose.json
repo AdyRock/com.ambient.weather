@@ -1,0 +1,18 @@
+{
+    "name": {
+        "en": "Temperature+ sensor"
+    },
+    "class": "sensor",
+    "capabilities": [
+        "alarm_battery",
+        "measure_humidity",
+        "measure_pressure",
+        "measure_temperature"
+    ],
+    "energy": {
+        "batteries": [
+            "AA"
+        ]
+    },
+    "$extends": ["globalCompose"]
+}

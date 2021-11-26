@@ -1,0 +1,27 @@
+{
+    "name": {
+        "en": "PM25 Meter"
+    },
+    "class": "sensor",
+    "capabilities": [
+        "measure_pm25",
+        "measure_pm25.avg",
+        "measure_aqi",
+        "measure_aqi.avg",
+        "measure_aq",
+        "measure_aq.avg",
+        "alarm_battery"
+    ],
+    "capabilitiesOptions": {
+        "measure_pm25.avg": {"title": "PM2.5 Avg 24h"},
+        "measure_aqi.avg": {"title": "Air Quality Index Avg 24h"},
+        "measure_aq.avg": {"title": "Air Quality Avg 24h"}
+    }
+    ,
+    "energy": {
+        "batteries": [
+            "AA", "AA"
+        ]
+    },
+    "$extends": ["globalCompose"]
+}
