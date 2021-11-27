@@ -1,5 +1,8 @@
 {
-  "1.0.0": {
-    "en": "First issue"
-  }
+    "1.0.0": {
+        "en": "First issue"
+    },
+    "1.0.1": {
+        "en": "Added button to open URL for the API Key"
+    }
 }
