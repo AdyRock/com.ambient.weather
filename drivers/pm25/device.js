@@ -71,34 +71,40 @@ class PM25Device extends AmbientDevice
             const pm25Avg = stationData[`pm25${this.inOut}_24h`];
             this.setCapability('measure_pm25.avg', pm25Avg, addRemove);
 
-            // Calculate AQI
-            let tableIdx = AQITable.findIndex(entry => entry.ConcHi > pm25);
-            let AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25 - AQITable[tableIdx].ConcLo) + AQITable[tableIdx].AQIlo;
-
-            this.setCapability('measure_aqi', AQI, addRemove);
-            const aqText = this.homey.__(AQITable[tableIdx].name);
-            if (aqText !== this.getCapabilityValue('measure_aq'))
+            if (pm25)
             {
-                this.setCapability('measure_aq', aqText, addRemove);
+                // Calculate AQI
+                let tableIdx = AQITable.findIndex(entry => entry.ConcHi > pm25);
+                let AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25 - AQITable[tableIdx].ConcLo) + AQITable[tableIdx].AQIlo;
 
-                const tokens = {
-                    measure_aq_name: aqText,
-                    measure_aq_item: tableIdx,
-                };
+                this.setCapability('measure_aqi', AQI, addRemove);
+                const aqText = this.homey.__(AQITable[tableIdx].name);
+                if (aqText !== this.getCapabilityValue('measure_aq'))
+                {
+                    this.setCapability('measure_aq', aqText, addRemove);
 
-                const state = {
-                    value: tableIdx,
-                };
+                    const tokens = {
+                        measure_aq_name: aqText,
+                        measure_aq_item: tableIdx,
+                    };
 
-                this.driver.triggerAQChanged(this, tokens, state);
+                    const state = {
+                        value: tableIdx,
+                    };
+
+                    this.driver.triggerAQChanged(this, tokens, state);
+                }
             }
 
-            // Calculate AQI Ag
-            tableIdx = AQITable.findIndex(entry => entry.ConcHi > pm25Avg);
-            AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25Avg - AQITable[tableIdx].ConcLo)  + AQITable[tableIdx].AQIlo;
+            if (pm25Avg)
+            {
+                // Calculate AQI Ag
+                let tableIdx = AQITable.findIndex(entry => entry.ConcHi > pm25Avg);
+                let AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25Avg - AQITable[tableIdx].ConcLo)  + AQITable[tableIdx].AQIlo;
 
-            this.setCapability('measure_aqi.avg', AQI, addRemove);
-            this.setCapability('measure_aq.avg', this.homey.__(AQITable[tableIdx].name), addRemove);
+                this.setCapability('measure_aqi.avg', AQI, addRemove);
+                this.setCapability('measure_aq.avg', this.homey.__(AQITable[tableIdx].name), addRemove);
+            }
 
             this.setCapability('alarm_battery', (stationData[`bat_25${this.inOut}`] !== undefined) ? (stationData[`bat_25${this.inOut}`] === 0) : stationData[`bat_25${this.inOut}`], addRemove);
         }

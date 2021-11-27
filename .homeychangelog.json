@@ -7,5 +7,8 @@
     },
     "1.0.2": {
         "en": "Changed target to Homey Pro only."
+    },
+    "1.0.3": {
+        "en": "Handle PM2.5 going offline."
     }
 }
