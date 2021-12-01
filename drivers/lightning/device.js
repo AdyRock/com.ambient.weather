@@ -39,6 +39,13 @@ class LightningDevice extends AmbientDevice
         {
             this.setCapabilityValue('measure_lightning_time', this.convertDate(this.lightning_time, newSettings));
         }
+        if (changedKeys.indexOf('logEnabled') >= 0)
+        {
+            setImmediate(() =>
+            {
+                this.homey.app.updateLogEnabledSetting(newSettings.logEnabled);
+            });
+        }
     }
 
     convertDate(date, settings)

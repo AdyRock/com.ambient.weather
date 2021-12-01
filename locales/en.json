@@ -8,5 +8,8 @@
     "UnhealthyLo": "Slightly Unhealthy",
     "Unhealthy": "Unhealthy",
     "UnhealthyHi": "Very Unhealthy",
-    "Hazardous": "Hazardous"
+    "Hazardous": "Hazardous",
+    "logSendFailed": "Failed to send the log",
+    "logSent": "The log has been sent to the developer",
+    "logEmpty": "there is nothing to send. Make sure loging is enabled"
 }

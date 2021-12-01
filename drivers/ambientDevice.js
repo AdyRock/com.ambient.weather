@@ -9,6 +9,8 @@ class AmbientDevice extends Homey.Device
 
     async onInit()
     {
+        this.updateLogEnabledSetting(this.homey.settings.get('logEnabled'));
+
         this.macAddress = this.getData().id;
         // Setup real time notifications
         const apiKey = this.getSetting('apiKey');
@@ -26,6 +28,37 @@ class AmbientDevice extends Homey.Device
 
          this.log('Device has been added');
      }
+
+     updateLogEnabledSetting(enabled)
+     {
+        if (enabled)
+        {
+            this.setSettings({'logEnabled': true});
+        }
+        else
+        {
+            this.setSettings({'logEnabled': false});
+        }
+     }
+
+    /**
+     * onSettings is called when the user updates the device's settings.
+     * @param {object} event the onSettings event data
+     * @param {object} event.oldSettings The old settings object
+     * @param {object} event.newSettings The new settings object
+     * @param {string[]} event.changedKeys An array of keys changed since the previous version
+     * @returns {Promise<string|void>} return a custom message that will be displayed
+     */
+    async onSettings({ oldSettings, newSettings, changedKeys })
+    {
+        if (changedKeys.indexOf('logEnabled') >= 0)
+        {
+            setImmediate(() =>
+            {
+                this.homey.app.updateLogEnabledSetting(newSettings.logEnabled);
+            });
+        }        
+    }
 
      async getStationData(apiKey)
      {
@@ -68,7 +101,8 @@ class AmbientDevice extends Homey.Device
 
      async onCapabilitySendLog(value)
      {
-         this.homey.app.sendLog('diag');
+        
+        this.homey.app.sendLog('diag', this.getSetting('replyEmail'));
      }
 
 }

@@ -16,19 +16,6 @@ class MyApp extends Homey.App
         this.realTimeAPI = null;
         this.registeringRealTime = false;
         this.realTimeSubKeys = [];
-        try
-        {
-            // Try to get the local IP address to see if the app is running in Homey cloud so we don't update the logs
-            await this.homey.cloud.getLocalAddress();
-            this.cloudOnly = false;
-        }
-        catch (err)
-        {
-            // getLocalAddress will fail on Homey cloud installations so dissbale the loging options
-            this.cloudOnly = true;
-            this.homey.settings.set('logEnabled', true);
-            this.log('Logging Enabled');
-        }
 
         this.homey.app.apiKey = this.homey.settings.get('APIToken');
         if (!this.homey.app.apiKey)
@@ -387,6 +374,24 @@ class MyApp extends Homey.App
         }
     }
 
+    updateLogEnabledSetting(enabled)
+    {
+        this.homey.settings.set('logEnabled', enabled);
+
+        const drivers = this.homey.drivers.getDrivers();
+        for (const driver of Object.values(drivers))
+        {
+            const devices = driver.getDevices();
+            for (const device of Object.values(devices))
+            {
+                if (device.updateLogEnabledSetting)
+                {
+                    device.updateLogEnabledSetting(enabled);
+                }
+            }
+        }
+    }
+
     updateLog(newMessage, isError = false)
     {
         // Maximum size of the log in characters
@@ -452,7 +457,7 @@ class MyApp extends Homey.App
     }
 
     // Send the log to the developer (not applicable to Homey cloud)
-    async sendLog(logType)
+    async sendLog(logType, replyAddress)
     {
         let tries = 5;
 
@@ -462,10 +467,19 @@ class MyApp extends Homey.App
             logData = this.homey.settings.get('diagLog');
         }
 
+        if (!logData)
+        {
+            throw new Error(this.homey.__('logEmpty'));
+        }
+
+        let lastError = '';
+
         while (tries-- > 0)
         {
             try
             {
+                lastError = '';
+
                 // create reusable transporter object using the default SMTP transport
                 const transporter = nodemailer.createTransport(
                 {
@@ -491,25 +505,24 @@ class MyApp extends Homey.App
                 {
                     from: `"Homey User" <${Homey.env.MAIL_USER}>`, // sender address
                     to: Homey.env.MAIL_RECIPIENT, // list of receivers
+                    cc: replyAddress,
                     subject: `Ambient Weather ${logType} log`, // Subject line
                     text: logData, // plain text body
                 },
                 );
 
-                this.updateLog(`Message sent: ${info.messageId}`);
-                // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-                // Preview only available when sending through an Ethereal account
-                this.log('Preview URL: ', nodemailer.getTestMessageUrl(info));
-                return this.homey.__('settings.logSent');
+                return this.homey.__('logSent');
             }
             catch (err)
             {
-                this.updateLog(`Send log error: ${err.message}`, 0);
+                lastError = err.message;
             }
         }
 
-        return (this.homey.__('settings.logSendFailed'));
+        if (lastError !== '')
+        {
+            throw new Error(lastError);
+        }
     }
 
 }

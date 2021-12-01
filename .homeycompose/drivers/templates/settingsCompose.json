@@ -1,0 +1,34 @@
+{
+    "settings": [
+        {
+            "type": "group",
+            "label": {
+                "en": "Diagnostics"
+            },
+            "children": [
+                {
+                    "id": "logEnabled",
+                    "type": "checkbox",
+                    "label": {
+                        "en": "Enable Logging"
+                    },
+                    "value": true,
+                    "hint": {
+                        "en": "When enable the app will log communications with the Ambient server to help diagnose problems"
+                    }
+                },
+                {
+                    "id": "replyEmail",
+                    "type": "text",
+                    "label": {
+                        "en": "Your email address (optional)"
+                    },
+                    "value": "",
+                    "hint": {
+                        "en": "If you don't supply your email address, logs will be sent anonymously, but you won't get a reply."
+                    }
+                }
+            ]
+        }
+    ]
+}
