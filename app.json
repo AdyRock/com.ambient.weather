@@ -12,7 +12,7 @@
     "en": "Ambient Weather"
   },
   "description": {
-    "en": "Use your Ambient weather station data and Homey to react to that storm or heatwave."
+    "en": "Your personal weather conditions to react to all types of weather"
   },
   "category": [
     "climate"
@@ -391,9 +391,9 @@
       },
       {
         "title": {
-          "en": "The feels like changed",
-          "nl": "Het voelt als veranderd",
-          "de": "Gefühlte Temperatur hat sich geändert"
+          "en": "The wind chill changed",
+          "nl": "De gevoelstemperatuur is veranderd",
+          "de": "Der Windchill hat sich geändert"
         },
         "platforms": [
           "local",
@@ -779,7 +779,7 @@
       {
         "id": "measure_rain.event_changed",
         "title": {
-          "en": "The event rainfall Changed"
+          "en": "The current amount of rainfall Changed"
         },
         "tokens": [
           {
@@ -802,10 +802,10 @@
       {
         "id": "measure_rain.event_is_less",
         "title": {
-          "en": "The event rainfall becomes less than"
+          "en": "The current amount of rainfall becomes less than"
         },
         "titleFormatted": {
-          "en": "The event rainfall becomes less than [[value]]mm"
+          "en": "The current amount of rainfall becomes less than [[value]]mm"
         },
         "tokens": [
           {
@@ -841,10 +841,10 @@
       {
         "id": "measure_rain.event_is_greater",
         "title": {
-          "en": "The event rainfall becomes greater than"
+          "en": "The current amount of rainfall becomes greater than"
         },
         "titleFormatted": {
-          "en": "The event rainfall becomes greater than [[value]]mm"
+          "en": "The current amount of rainfall becomes greater than [[value]]mm"
         },
         "tokens": [
           {
@@ -1951,7 +1951,7 @@
           "en": "This Flow will continue if event rainfall is/is not less than the set value."
         },
         "titleFormatted": {
-          "en": "The event rainfall is !{{is|is not}} less than [[value]]mm"
+          "en": "The current amount of rainfall is !{{is|is not}} less than [[value]]mm"
         },
         "args": [
           {
@@ -1983,7 +1983,7 @@
           "en": "This Flow will continue if event rainfall is/is not equal to the set value."
         },
         "titleFormatted": {
-          "en": "The event rainfall is !{{equal|not equal}} to [[value]]mm"
+          "en": "The current amount of rainfall is !{{equal|not equal}} to [[value]]mm"
         },
         "args": [
           {
@@ -2515,7 +2515,7 @@
               "id": "logEnabled",
               "type": "checkbox",
               "label": {
-                "en": "Enable Diagnostic Logging"
+                "en": "Enable Logging"
               },
               "value": true,
               "hint": {
@@ -2550,7 +2550,7 @@
               "id": "logEnabled",
               "type": "checkbox",
               "label": {
-                "en": "Enable Diagnostic Logging"
+                "en": "Enable Logging"
               },
               "value": true,
               "hint": {
@@ -2658,7 +2658,7 @@
               "id": "logEnabled",
               "type": "checkbox",
               "label": {
-                "en": "Enable Diagnostic Logging"
+                "en": "Enable Logging"
               },
               "value": true,
               "hint": {
@@ -2713,7 +2713,7 @@
         "large": "/drivers/soil_moisture/assets/images/large.png"
       },
       "name": {
-        "en": "Soil Moisture"
+        "en": "Soil Moisture Sensor"
       },
       "class": "sensor",
       "capabilities": [
@@ -2752,7 +2752,7 @@
               "id": "logEnabled",
               "type": "checkbox",
               "label": {
-                "en": "Enable Diagnostic Logging"
+                "en": "Enable Logging"
               },
               "value": true,
               "hint": {
@@ -2807,7 +2807,7 @@
         "large": "/drivers/station/assets/images/large.png"
       },
       "name": {
-        "en": "Station"
+        "en": "Weather Station"
       },
       "class": "other",
       "energy": {
@@ -2955,7 +2955,7 @@
               "id": "logEnabled",
               "type": "checkbox",
               "label": {
-                "en": "Enable Diagnostic Logging"
+                "en": "Enable Logging"
               },
               "value": true,
               "hint": {

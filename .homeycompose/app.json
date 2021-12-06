@@ -11,7 +11,7 @@
     "en": "Ambient Weather"
   },
   "description": {
-    "en": "Use your Ambient weather station data and Homey to react to that storm or heatwave."
+    "en": "Your personal weather conditions to react to all types of weather"
   },
   "category": [
     "climate"

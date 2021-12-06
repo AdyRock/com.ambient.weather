@@ -1,6 +1,6 @@
 {
     "name": {
-        "en": "Soil Moisture"
+        "en": "Soil Moisture Sensor"
     },
     "class": "sensor",
     "capabilities": [

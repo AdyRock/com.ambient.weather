@@ -1,8 +1,8 @@
 {
     "title": {
-        "en": "The feels like changed",
-        "nl": "Het voelt als veranderd",
-        "de": "Gefühlte Temperatur hat sich geändert"
+        "en": "The wind chill changed",
+        "nl": "De gevoelstemperatuur is veranderd",
+        "de": "Der Windchill hat sich geändert"
     },
     "platforms": [
         "local",

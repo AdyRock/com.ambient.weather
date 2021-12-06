@@ -173,7 +173,7 @@
         {
             "id": "measure_rain.event_changed",
             "title": {
-                "en": "The event rainfall Changed"
+                "en": "The current amount of rainfall Changed"
             },
             "tokens": [
                 {
@@ -189,10 +189,10 @@
         {
             "id": "measure_rain.event_is_less",
             "title": {
-                "en": "The event rainfall becomes less than"
+                "en": "The current amount of rainfall becomes less than"
             },
             "titleFormatted": {
-                "en": "The event rainfall becomes less than [[value]]mm"
+                "en": "The current amount of rainfall becomes less than [[value]]mm"
             },
             "tokens": [
                 {
@@ -223,10 +223,10 @@
         {
             "id": "measure_rain.event_is_greater",
             "title": {
-                "en": "The event rainfall becomes greater than"
+                "en": "The current amount of rainfall becomes greater than"
             },
             "titleFormatted": {
-                "en": "The event rainfall becomes greater than [[value]]mm"
+                "en": "The current amount of rainfall becomes greater than [[value]]mm"
             },
             "tokens": [
                 {
@@ -884,7 +884,7 @@
                 "en": "This Flow will continue if event rainfall is/is not less than the set value."
             },
             "titleFormatted": {
-                "en": "The event rainfall is !{{is|is not}} less than [[value]]mm"
+                "en": "The current amount of rainfall is !{{is|is not}} less than [[value]]mm"
             },
             "args": [
                 {
@@ -911,7 +911,7 @@
                 "en": "This Flow will continue if event rainfall is/is not equal to the set value."
             },
             "titleFormatted": {
-                "en": "The event rainfall is !{{equal|not equal}} to [[value]]mm"
+                "en": "The current amount of rainfall is !{{equal|not equal}} to [[value]]mm"
             },
             "args": [
                 {
