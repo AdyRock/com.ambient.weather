@@ -5,8 +5,7 @@
         "de": "Der Windchill hat sich geändert"
     },
     "platforms": [
-        "local",
-        "cloud"
+        "local"
     ],
     "tokens": [
         {

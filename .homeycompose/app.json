@@ -1,11 +1,10 @@
 {
   "id": "com.ambient.weather",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
-    "local",
-    "cloud"
+    "local"
   ],
   "name": {
     "en": "Ambient Weather"

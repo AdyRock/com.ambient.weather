@@ -10,5 +10,11 @@
     },
     "1.0.3": {
         "en": "Handle crash when PM2.5 goes offline. Settup Diagnostic log Maintenance action on all devices."
+    },
+    "1.0.4": {
+        "en": "Handle crash when PM2.5 goes offline. Settup Diagnostic log Maintenance action on all devices."
+    },
+    "1.0.5": {
+        "en": "Handle crash when PM2.5 goes offline. Settup Diagnostic log Maintenance action on all devices."
     }
 }
