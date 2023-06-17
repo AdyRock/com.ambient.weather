@@ -54,9 +54,22 @@ class StationDriver extends AmbientDriver
                     apiKey,
                 };
 
+                let location = '';
+                let name = '';
+                if (station.info && station.info.coords)
+                {
+                    location = station.info.coords.location;
+                    name = station.info.coords.name;
+                }
+
+                if (name === '')
+                {
+                    name = station.macAddress;
+                }
+
                 // Add this device to the table
                 devices.push({
-                        name: `${station.info.coords.location} - ${station.info.name}`,
+                        name: `${location} - ${name}`,
                         data,
                         settings,
                     });
