@@ -16,5 +16,8 @@
     },
     "1.0.5": {
         "en": "Handle crash when PM2.5 goes offline. Settup Diagnostic log Maintenance action on all devices."
+    },
+    "1.0.6": {
+        "en": "Trap missing location when adding a device."
     }
 }
