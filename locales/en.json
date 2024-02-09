@@ -1,15 +1,15 @@
 {
-    "title": "Your Ambient Account Information.",
-    "apiKey": "API KEY",
-    "apiKeyRequired": "API Key is required",
-    "addStation": "Next",
-    "good": "Good",
-    "Moderate": "Moderate",
-    "UnhealthyLo": "Slightly Unhealthy",
-    "Unhealthy": "Unhealthy",
-    "UnhealthyHi": "Very Unhealthy",
-    "Hazardous": "Hazardous",
-    "logSendFailed": "Failed to send the log",
-    "logSent": "The log has been sent to the developer",
-    "logEmpty": "there is nothing to send. Make sure loging is enabled"
+	"title": "Your Ambient Account Information.",
+	"apiKey": "API KEY",
+	"apiKeyRequired": "API Key is required",
+	"addStation": "Next",
+	"good": "Good",
+	"Moderate": "Moderate",
+	"UnhealthyLo": "Slightly Unhealthy",
+	"Unhealthy": "Unhealthy",
+	"UnhealthyHi": "Very Unhealthy",
+	"Hazardous": "Hazardous",
+	"logSendFailed": "Failed to send the log",
+	"logSent": "The log has been sent to the developer",
+	"logEmpty": "there is nothing to send. Make sure logging is enabled"
 }

@@ -1,0 +1,64 @@
+{
+    "title": {
+        "en": "The hours since it last rained has become"
+    },
+    "titleFormatted": {
+        "en": "It last rained [[compare_type]] [[hours]] hours ago"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=station"
+        },
+        {
+            "type": "dropdown",
+            "name": "compare_type",
+            "title": {
+                "en": "Comparison type"
+            },
+            "values": [
+                {
+                    "id": "<=",
+                    "label": {
+                        "en": "less than or equal to"
+                    }
+                },
+                {
+                    "id": "==",
+                    "label": {
+                        "en": "equal to"
+                    }
+                },
+                {
+                    "id": ">=",
+                    "label": {
+                        "en": "more than or equal to"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "number",
+            "name": "hours",
+            "min": 0,
+            "max": 500,
+            "step": 1,
+            "placeholder": {
+                "en": "Set a value"
+            },
+            "title": {
+                "en": "Hours"
+            }
+        }
+    ],
+    "tokens": [
+        {
+            "name": "hours",
+            "type": "number",
+            "title": {
+                "en": "Hours since it rained"
+            }
+        }
+    ]
+}

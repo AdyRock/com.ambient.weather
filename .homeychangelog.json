@@ -9,15 +9,18 @@
         "en": "Changed target to Homey Pro only."
     },
     "1.0.3": {
-        "en": "Handle crash when PM2.5 goes offline. Settup Diagnostic log Maintenance action on all devices."
+        "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
     },
     "1.0.4": {
-        "en": "Handle crash when PM2.5 goes offline. Settup Diagnostic log Maintenance action on all devices."
+        "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
     },
     "1.0.5": {
-        "en": "Handle crash when PM2.5 goes offline. Settup Diagnostic log Maintenance action on all devices."
+        "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
     },
     "1.0.6": {
         "en": "Trap missing location when adding a device."
+    },
+    "1.0.7": {
+        "en": "Added last rained capability and Flow cards to station."
     }
 }

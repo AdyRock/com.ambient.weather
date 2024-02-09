@@ -1,46 +1,46 @@
 {
-    "name": {
-        "en": "PM25 Meter"
-    },
-    "class": "sensor",
-    "capabilities": [
-        "measure_pm25",
-        "measure_pm25.avg",
-        "measure_aqi",
-        "measure_aqi.avg",
-        "measure_aq",
-        "measure_aq.avg",
-        "alarm_battery",
-        "button.send_log"
-    ],
-    "capabilitiesOptions": {
-        "measure_pm25.avg": {
-            "title": "PM2.5 Avg 24h"
-        },
-        "measure_aqi.avg": {
-            "title": "Air Quality Index Avg 24h"
-        },
-        "measure_aq.avg": {
-            "title": "Air Quality Avg 24h"
-        },
-        "button.send_log": {
-            "maintenanceAction": true,
-            "title": {
-                "en": "Send Diagnostics Log"
-            },
-            "desc": {
-                "en": "Send a diagnostics log to the developer"
-            }
-        }
-    },
-    "energy": {
-        "batteries": [
-            "AA",
-            "AA"
-        ]
-    },
-    "$extends": [
-        "settingsCompose",
-        "globalCompose"
-    ]
+	"name": {
+		"en": "PM25 Meter"
+	},
+	"class": "sensor",
+	"capabilities": [
+		"measure_pm25",
+		"measure_pm25.avg",
+		"measure_aqi",
+		"measure_aqi.avg",
+		"measure_aq",
+		"measure_aq.avg",
+		"alarm_battery",
+		"button.send_log"
+	],
+	"capabilitiesOptions": {
+		"measure_pm25.avg": {
+			"title": "PM2.5 Avg 24h"
+		},
+		"measure_aqi.avg": {
+			"title": "Air Quality Index Avg 24h"
+		},
+		"measure_aq.avg": {
+			"title": "Air Quality Avg 24h"
+		},
+		"button.send_log": {
+			"maintenanceAction": true,
+			"title": {
+				"en": "Send Diagnostics Log"
+			},
+			"desc": {
+				"en": "Send a diagnostics log to the developer"
+			}
+		}
+	},
+	"energy": {
+		"batteries": [
+			"AA",
+			"AA"
+		]
+	},
+	"$extends": [
+		"settingsCompose",
+		"globalCompose"
+	]
 }

@@ -1,141 +1,142 @@
 {
-    "name": {
-        "en": "Weather Station"
-    },
-    "class": "other",
-    "energy": {
-        "batteries": [
-            "AA",
-            "AA"
-        ]
-    },
-    "capabilities": [
-        "measure_temperature",
-        "measure_temperature.feelsLike",
-        "measure_temperature.dewPoint",
-        "measure_humidity",
-        "measure_wind_angle",
-        "measure_wind_strength",
-        "measure_wind_angle.avg2m",
-        "measure_wind_strength.avg2m",
-        "measure_wind_angle.avg10m",
-        "measure_wind_strength.avg10m",
-        "measure_gust_angle",
-        "measure_gust_strength",
-        "measure_gust_strength.daily",
-        "measure_radiation",
-        "measure_ultraviolet",
-        "measure_rain",
-        "measure_rain.rate",
-        "measure_rain.today",
-        "measure_rain.period24",
-        "measure_rain.week",
-        "measure_rain.month",
-        "measure_rain.year",
-        "measure_rain.total",
-        "alarm_battery",
-        "button.send_log"
-    ],
-    "capabilitiesOptions": {
-        "measure_temperature.feelsLike": {
-            "title": {
-                "en": "Feels Like",
-                "nl": "Voelt als",
-                "de": "Gefühlte Temperatur"
-            }
-        },
-        "measure_temperature.dewPoint": {
-            "title": {
-                "en": "Dew point",
-                "nl": "Dauwpunt",
-                "de": "Taupunkt"
-            }
-        },
-        "measure_gust_strength.daily": {
-            "title": {
-                "en": "Maximum wind speed today"
-            }
-        },
-        "measure_wind_angle.avg2m": {
-            "title": {
-                "en": "Average wind angle in last 2 minutes"
-            }
-        },
-        "measure_wind_strength.avg2m": {
-            "title": {
-                "en": "Average wind speed in last 2 minutes"
-            }
-        },
-        "measure_wind_angle.avg10m": {
-            "title": {
-                "en": "Average wind angle in last 10 minutes"
-            }
-        },
-        "measure_wind_strength.avg10m": {
-            "title": {
-                "en": "Average wind speed in last 10 minutes"
-            }
-        },
-        "measure_rain": {
-            "title": {
-                "en": "Rain Event"
-            }
-        },
-        "measure_rain.rate": {
-            "title": {
-                "en": "Rain Rate"
-            },
-            "units": {
-                "en": "mm/hr"
-            }
-        },
-        "measure_rain.today": {
-            "title": {
-                "en": "Total Rain Today"
-            }
-        },
-        "measure_rain.period24": {
-            "title": {
-                "en": "Total Rain last 24 hours"
-            }
-        },
-        "measure_rain.week": {
-            "title": {
-                "en": "Total Rain this week"
-            }
-        },
-        "measure_rain.month": {
-            "title": {
-                "en": "Total Rain this month"
-            }
-        },
-        "measure_rain.year": {
-            "title": {
-                "en": "Total Rain this year"
-            }
-        },
-        "measure_rain.total": {
-            "title": {
-                "en": "Total Rain recorded"
-            }
-        },
-        "measure_pm25.period24": {
-            "title": {
-                "en": "PM2.5 last 24 hours"
-            }
-        },
-        "button.send_log": {
-            "maintenanceAction": true,
-            "title": {
-                "en": "Send Diagnostics Log"
-            },
-            "desc": {
-                "en": "Send a diagnostics log to the developer"
-            }
-        }
-    },
-    "$extends": [
-        "settingsCompose",
-        "globalCompose"
-    ]
+	"name": {
+		"en": "Weather Station"
+	},
+	"class": "other",
+	"energy": {
+		"batteries": [
+			"AA",
+			"AA"
+		]
+	},
+	"capabilities": [
+		"measure_temperature",
+		"measure_temperature.feelsLike",
+		"measure_temperature.dewPoint",
+		"measure_humidity",
+		"measure_wind_angle",
+		"measure_wind_strength",
+		"measure_wind_angle.avg2m",
+		"measure_wind_strength.avg2m",
+		"measure_wind_angle.avg10m",
+		"measure_wind_strength.avg10m",
+		"measure_gust_angle",
+		"measure_gust_strength",
+		"measure_gust_strength.daily",
+		"measure_radiation",
+		"measure_ultraviolet",
+		"measure_rain",
+		"measure_rain.rate",
+		"measure_rain.today",
+		"measure_rain.period24",
+		"measure_rain.week",
+		"measure_rain.month",
+		"measure_rain.year",
+		"measure_rain.total",
+		"last_rain_event",
+		"alarm_battery",
+		"button.send_log"
+	],
+	"capabilitiesOptions": {
+		"measure_temperature.feelsLike": {
+			"title": {
+				"en": "Feels Like",
+				"nl": "Voelt als",
+				"de": "Gefühlte Temperatur"
+			}
+		},
+		"measure_temperature.dewPoint": {
+			"title": {
+				"en": "Dew point",
+				"nl": "Dauwpunt",
+				"de": "Taupunkt"
+			}
+		},
+		"measure_gust_strength.daily": {
+			"title": {
+				"en": "Maximum wind speed today"
+			}
+		},
+		"measure_wind_angle.avg2m": {
+			"title": {
+				"en": "Average wind angle in last 2 minutes"
+			}
+		},
+		"measure_wind_strength.avg2m": {
+			"title": {
+				"en": "Average wind speed in last 2 minutes"
+			}
+		},
+		"measure_wind_angle.avg10m": {
+			"title": {
+				"en": "Average wind angle in last 10 minutes"
+			}
+		},
+		"measure_wind_strength.avg10m": {
+			"title": {
+				"en": "Average wind speed in last 10 minutes"
+			}
+		},
+		"measure_rain": {
+			"title": {
+				"en": "Rain Event"
+			}
+		},
+		"measure_rain.rate": {
+			"title": {
+				"en": "Rain Rate"
+			},
+			"units": {
+				"en": "mm/hr"
+			}
+		},
+		"measure_rain.today": {
+			"title": {
+				"en": "Total Rain Today"
+			}
+		},
+		"measure_rain.period24": {
+			"title": {
+				"en": "Total Rain last 24 hours"
+			}
+		},
+		"measure_rain.week": {
+			"title": {
+				"en": "Total Rain this week"
+			}
+		},
+		"measure_rain.month": {
+			"title": {
+				"en": "Total Rain this month"
+			}
+		},
+		"measure_rain.year": {
+			"title": {
+				"en": "Total Rain this year"
+			}
+		},
+		"measure_rain.total": {
+			"title": {
+				"en": "Total Rain recorded"
+			}
+		},
+		"measure_pm25.period24": {
+			"title": {
+				"en": "PM2.5 last 24 hours"
+			}
+		},
+		"button.send_log": {
+			"maintenanceAction": true,
+			"title": {
+				"en": "Send Diagnostics Log"
+			},
+			"desc": {
+				"en": "Send a diagnostics log to the developer"
+			}
+		}
+	},
+	"$extends": [
+		"settingsCompose",
+		"globalCompose"
+	]
 }

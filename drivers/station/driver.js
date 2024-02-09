@@ -5,78 +5,108 @@ const AmbientDriver = require('../ambientDriver');
 class StationDriver extends AmbientDriver
 {
 
-    /**
-     * onInit is called when the driver is initialized.
-     */
-    async onInit()
-    {
-        this.feelLikeTrigger = this.homey.flow.getDeviceTriggerCard('measure_temperature_feelsLike_changed');
-        this.dewPointTrigger = this.homey.flow.getDeviceTriggerCard('measure_temperature_dewPoint_changed');
-        this.log('StationDriver has been initialized');
-    }
+	/**
+	 * onInit is called when the driver is initialized.
+	 */
+	async onInit()
+	{
+		this.hoursSinceRainedTrigger = this.homey.flow.getDeviceTriggerCard('hours_since_last_rained_changed');
+		this.hoursSinceRainedTrigger.registerRunListener(async (args, state) =>
+		{
+			// If true, this flow should run
+			const argValue = parseInt(args.hours, 10);
 
-    async triggerFeelLike(Device, Value)
-    {
-        // trigger the card
-        this.homey.app.updateLog(`Triggering Feels Like changed with: ${Value}`);
-        const tokens = { feelsLike: Value };
-        const state = {};
+			if (args.compare_type === '<=')
+			{
+				// Check <=
+				return state.value <= argValue;
+			}
+			if (args.compare_type === '==')
+			{
+				// Check <=
+				return state.value === argValue;
+			}
+			if (args.compare_type === '>=')
+			{
+				// Check <=
+				return state.value >= argValue;
+			}
 
-        this.feelLikeTrigger.trigger(Device, tokens, state)
-            .then(this.log('Trigger feelsLike'))
-            .catch(this.error);
-    }
+			return false;
+		});
 
-    async triggerDewPoint(Device, Value)
-    {
-        // trigger the card
-        this.homey.app.updateLog(`Triggering Dew Point like changed with: ${Value}`);
-        const tokens = { dewPoint: Value };
-        const state = {};
+		this.feelLikeTrigger = this.homey.flow.getDeviceTriggerCard('measure_temperature_feelsLike_changed');
+		this.dewPointTrigger = this.homey.flow.getDeviceTriggerCard('measure_temperature_dewPoint_changed');
+		this.log('StationDriver has been initialized');
+	}
 
-        this.dewPointTrigger.trigger(Device, tokens, state)
-            .then(this.log('Trigger dewPoint'))
-            .catch(this.error);
-    }
+	async triggerFeelLike(Device, Value)
+	{
+		// trigger the card
+		this.homey.app.updateLog(`Triggering Feels Like changed with: ${Value}`);
+		const tokens = { feelsLike: Value };
+		const state = {};
 
-    async onPairListDevices(ambientAPI, apiKey)
-    {
-        const devices = [];
+		this.feelLikeTrigger.trigger(Device, tokens, state)
+			.then(this.log('Trigger feelsLike'))
+			.catch(this.error);
+	}
 
-        const stations = await ambientAPI.userDevices();
-        this.homey.app.updateLog(`Detected Stations: ${this.homey.app.varToString(stations)}`);
+	async triggerDewPoint(Device, Value)
+	{
+		// trigger the card
+		this.homey.app.updateLog(`Triggering Dew Point like changed with: ${Value}`);
+		const tokens = { dewPoint: Value };
+		const state = {};
 
-        stations.forEach(station => {
-                const data = {
-                    id: station.macAddress,
-                };
-                const settings = {
-                    apiKey,
-                };
+		this.dewPointTrigger.trigger(Device, tokens, state)
+			.then(this.log('Trigger dewPoint'))
+			.catch(this.error);
+	}
 
-                let location = '';
-                let name = '';
-                if (station.info && station.info.coords)
-                {
-                    location = station.info.coords.location;
-                    name = station.info.coords.name;
-                }
+	async TriggerHoursSinceRained(device, tokens, state)
+	{
+		this.hoursSinceRainedTrigger.trigger(device, tokens, state).catch(this.error);
+	}
 
-                if (name === '')
-                {
-                    name = station.macAddress;
-                }
+	async onPairListDevices(ambientAPI, apiKey)
+	{
+		const devices = [];
 
-                // Add this device to the table
-                devices.push({
-                        name: `${location} - ${name}`,
-                        data,
-                        settings,
-                    });
-            });
+		const stations = await ambientAPI.userDevices();
+		this.homey.app.updateLog(`Detected Stations: ${this.homey.app.varToString(stations)}`);
 
-        return devices;
-    }
+		stations.forEach((station) => {
+				const data = {
+					id: station.macAddress,
+				};
+				const settings = {
+					apiKey,
+				};
+
+				let location = '';
+				let name = '';
+				if (station.info && station.info.coords)
+				{
+					location = station.info.coords.location;
+					name = station.info.coords.name;
+				}
+
+				if (name === '')
+				{
+					name = station.macAddress;
+				}
+
+				// Add this device to the table
+				devices.push({
+						name: `${location} - ${name}`,
+						data,
+						settings,
+					});
+			});
+
+		return devices;
+	}
 
 }
 

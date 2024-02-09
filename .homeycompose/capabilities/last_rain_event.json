@@ -1,0 +1,9 @@
+{
+    "type": "string",
+    "title": {
+        "en": "Last Rained"
+    },
+    "getable": true,
+    "setable": false,
+    "icon": "/assets/rain_time.svg"
+}
