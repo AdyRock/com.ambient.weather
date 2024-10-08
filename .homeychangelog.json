@@ -22,5 +22,8 @@
     },
     "1.0.7": {
         "en": "Added last rained capability and Flow cards to station."
-    }
+    },
+	"1.0.8": {
+		"en": "Added extra validation to fix crashes on bad data."
+	}
 }
