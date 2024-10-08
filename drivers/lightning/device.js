@@ -116,7 +116,7 @@ class LightningDevice extends AmbientDevice
 			if (stationData.lightning_time !== '')
 			{
 				this.lightning_time = stationData.lightning_time;
-				this.setStoreValue('lightning_time', this.lightning_time);
+				this.setStoreValue('lightning_time', this.lightning_time).catch(this.error);
 				this.setCapability('measure_lightning_time', this.convertDate(this.lightning_time, settings), addRemove);
 			}
 

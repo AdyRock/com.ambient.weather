@@ -87,10 +87,13 @@ class PM25Device extends AmbientDevice
 			{
 				// Calculate AQI Ag
 				const tableIdx = AQITable.findIndex((entry) => entry.ConcHi > pm25Avg);
-				const AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25Avg - AQITable[tableIdx].ConcLo)  + AQITable[tableIdx].AQIlo;
+				if ((tableIdx >= 0) && (tableIdx < AQITable.length))
+				{
+					const AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25Avg - AQITable[tableIdx].ConcLo)  + AQITable[tableIdx].AQIlo;
 
-				this.setCapability('measure_aqi.avg', AQI, addRemove);
-				this.setCapability('measure_aq.avg', this.homey.__(AQITable[tableIdx].name), addRemove);
+					this.setCapability('measure_aqi.avg', AQI, addRemove);
+					this.setCapability('measure_aq.avg', this.homey.__(AQITable[tableIdx].name), addRemove);
+				}
 			}
 
 			this.setCapability('alarm_battery', (stationData[`bat_25${this.inOut}`] !== undefined) ? (stationData[`bat_25${this.inOut}`] === 0) : stationData[`bat_25${this.inOut}`], addRemove);
