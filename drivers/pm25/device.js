@@ -61,7 +61,14 @@ class PM25Device extends AmbientDevice
 			if (pm25)
 			{
 				// Calculate AQI
-				const tableIdx = AQITable.findIndex((entry) => entry.ConcHi > pm25);
+				let tableIdx = AQITable.findIndex((entry) => entry.ConcHi > pm25);
+
+				// If the value is above the highest value in the table, use the highest value
+				if (tableIdx === -1)
+				{
+					tableIdx = AQITable.length - 1;
+				}
+
 				const AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25 - AQITable[tableIdx].ConcLo) + AQITable[tableIdx].AQIlo;
 
 				this.setCapability('measure_aqi', AQI, addRemove);
