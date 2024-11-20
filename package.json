@@ -1,6 +1,6 @@
 {
   "name": "com.ambient.weather",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "main": "app.js",
   "scripts": {
     "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."

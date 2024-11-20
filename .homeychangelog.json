@@ -25,5 +25,8 @@
     },
 	"1.0.8": {
 		"en": "Added extra validation to fix crashes on bad data."
+	},
+	"1.0.9": {
+		"en": "Fix error when PM2.5 reading is above highest value in the AQITable table."
 	}
 }
