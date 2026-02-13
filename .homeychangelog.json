@@ -28,5 +28,8 @@
 	},
 	"1.0.9": {
 		"en": "Fix error when PM2.5 reading is above highest value in the AQITable table."
+	},
+	"1.0.10": {
+		"en": "Ensure raw date is a string when date is converted."
 	}
 }

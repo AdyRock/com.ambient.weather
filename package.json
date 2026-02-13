@@ -1,6 +1,6 @@
 {
   "name": "com.ambient.weather",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "main": "app.js",
   "scripts": {
     "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
@@ -13,7 +13,7 @@
     "eslint-config-athom": "^3.0.1"
   },
   "dependencies": {
-    "nodemailer": "^6.5.0",
-    "ambient-weather-api": "0.0.6"
+    "ambient-weather-api": "0.0.6",
+    "nodemailer": "^8.0.1"
   }
 }

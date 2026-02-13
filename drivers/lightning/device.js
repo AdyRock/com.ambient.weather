@@ -80,7 +80,7 @@ class LightningDevice extends AmbientDevice
 			}
 			else
 			{
-				strDate = date;
+				strDate = `${date}`;
 			}
 		}
 

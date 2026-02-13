@@ -101,7 +101,7 @@ class AmbientDevice extends Homey.Device
 
 	async onCapabilitySendLog(value)
 	{
-		this.homey.app.sendLog('diag', this.getSetting('replyEmail'));
+		this.homey.app.sendLog('diag', this.getSetting('replyEmail')).catch(this.error);
 	}
 
 }
