@@ -46,6 +46,9 @@ class StationDevice extends AmbientDevice
 	{
 		if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
 		{
+			// Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes.
+			this.pollStationData();
+
 			this.setCapability('measure_temperature', (stationData.tempf !== undefined) ? (((stationData.tempf - 32) * 5) / 9) : stationData.tempf, addRemove);
 			this.setCapability('measure_temperature.feelsLike', (stationData.feelsLike !== undefined) ? (((stationData.feelsLike - 32) * 5) / 9) : stationData.feelsLike, addRemove);
 			this.setCapability('measure_temperature.dewPoint', (stationData.dewPoint !== undefined) ? (((stationData.dewPoint - 32) * 5) / 9) : stationData.dewPoint, addRemove);

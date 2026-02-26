@@ -272,7 +272,7 @@ class MyApp extends Homey.App
 	{
 		while (this.registeringRealTime)
 		{
-			this.log('waiting to register realtime');
+			this.homey.app.updateLog('waiting to register realtime');
 			await this.asyncDelay(500);
 		}
 
@@ -300,7 +300,7 @@ class MyApp extends Homey.App
 			// Already connected so just subscribe
 			this.realTimeAPI.subscribe(this.realTimeSubKeys);
 			this.registeringRealTime = false;
-			this.log('Registered realtime');
+			this.homey.app.updateLog('Registered realtime');
 			return;
 		}
 
@@ -318,7 +318,8 @@ class MyApp extends Homey.App
 
 		this.realTimeAPI.on('subscribed', (data) =>
 		{
-			this.homey.app.updateLog(`Subscribed to ${data.devices.length} device(s): ${data.devices.map(getName).join(', ')}`);
+			this.homey.app.updateLog(`Subscribed to ${data.devices.length} device(s): ${data.devices.map(getName).join(', ')}`, true);
+			this.homey.app.updateLog(`Subscribed to ${this.homey.app.varToString(data)}`);
 		});
 
 		this.realTimeAPI.on('data', (data) =>
@@ -328,7 +329,7 @@ class MyApp extends Homey.App
 		});
 
 		this.registeringRealTime = false;
-		this.log('Registered realtime');
+		this.homey.app.updateLog('Registered realtime');
 	}
 
 	updateStationData(data)

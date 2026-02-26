@@ -52,6 +52,9 @@ class PM25Device extends AmbientDevice
 	{
 		if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
 		{
+			// Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes.
+			this.pollStationData();
+
 			const pm25 = stationData[`pm25${this.inOut}`];
 			this.setCapability('measure_pm25', pm25, addRemove);
 

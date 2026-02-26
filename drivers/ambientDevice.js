@@ -15,6 +15,26 @@ class AmbientDevice extends Homey.Device
 		// Setup real time notifications
 		const apiKey = this.getSetting('apiKey');
 		this.homey.app.registerRealTime(apiKey);
+		this.pollStationData();
+	}
+
+	async pollStationData()
+	{
+		// First time we poll immediately, then we wait 10 seconds to prevent multiple devices polling at the same time
+		let timeout = 100;
+		if (this.pollTimer)
+		{
+			this.homey.clearTimeout(this.pollTimer);
+			timeout = 10000;
+			this.pollTimer = null;
+		}
+
+		this.pollTimer = this.homey.setTimeout(() =>
+		{
+			const apiKey = this.getSetting('apiKey');
+			this.getStationData(apiKey);
+			this.pollStationData();
+		}, timeout);
 	}
 
 	/**
@@ -22,9 +42,9 @@ class AmbientDevice extends Homey.Device
 	 */
 	async onAdded()
 	{
-		// Initialise with the current data
-		const apiKey = this.getSetting('apiKey');
-		this.getStationData(apiKey);
+		// // Initialise with the current data
+		// const apiKey = this.getSetting('apiKey');
+		// this.getStationData(apiKey);
 
 		this.log('Device has been added');
 	}

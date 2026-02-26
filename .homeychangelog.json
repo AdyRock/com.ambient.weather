@@ -31,5 +31,8 @@
 	},
 	"1.0.10": {
 		"en": "Ensure raw date is a string when date is converted."
+	},
+	"1.0.11": {
+		"en": "Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes."
 	}
 }
