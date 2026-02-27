@@ -34,5 +34,8 @@
 	},
 	"1.0.11": {
 		"en": "Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes."
+	},
+	"1.0.12": {
+		"en": "Increase polling time to 2 minutes to keep within API rate limits."
 	}
 }
