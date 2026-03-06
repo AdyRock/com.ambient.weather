@@ -1,43 +1,70 @@
 {
-  "id": "com.ambient.weather",
-  "version": "1.0.12",
-  "compatibility": ">=5.0.0",
-  "sdk": 3,
-  "platforms": [
-	"local"
-  ],
-  "name": {
-	"en": "Ambient Weather"
-  },
-  "description": {
-	"en": "Your personal weather conditions to react to all types of weather"
-  },
-  "category": [
-	"climate"
-  ],
-  "permissions": [],
-  "support": "https://github.com/AdyRock/com.ambient.weather/issues",
-  "homepage": "https://ambientweather.com//",
-  "contributing": {
-	  "donate": {
-		  "paypal": {
-			  "username": "adyrock"
-		  }
-	  }
-  },
-  "bugs": {
-	  "url": "https://github.com/AdyRock/com.ambient.weather/issues"
-  },
-  "source": "https://github.com/AdyRock/com.ambient.weather",
-  "homeyCommunityTopicId": 55499,
-"images": {
-	"small": "/assets/images/small.jpg",
-	"large": "/assets/images/large.jpg",
-	"xlarge": "/assets/images/xlarge.jpg"
-  },
-  "author": {
-	"name": "Adrian Rockall",
-	"email": "ady@rockall.plus.com"
-  },
-  "brandColor": "#020676"
+	"id": "com.ambient.weather",
+	"version": "1.0.12",
+	"compatibility": ">=5.0.0",
+	"sdk": 3,
+	"platforms": [
+		"local"
+	],
+	"name": {
+		"en": "Ambient Weather"
+	},
+	"description": {
+		"en": "Your personal weather conditions to react to all types of weather"
+	},
+	"category": [
+		"climate"
+	],
+	"permissions": [],
+	"support": "https://github.com/AdyRock/com.ambient.weather/issues",
+	"homepage": "https://ambientweather.com//",
+	"contributing": {
+		"donate": {
+			"paypal": {
+				"username": "adyrock"
+			}
+		}
+	},
+	"bugs": {
+		"url": "https://github.com/AdyRock/com.ambient.weather/issues"
+	},
+	"source": "https://github.com/AdyRock/com.ambient.weather",
+	"homeyCommunityTopicId": 55499,
+	"api": {
+		"getDeviceLog": {
+			"method": "get",
+			"path": "/getDeviceLog",
+			"public": false
+		},
+		"getInfoLog": {
+			"method": "get",
+			"path": "/getInfoLog",
+			"public": false
+		},
+		"clearLog": {
+			"method": "post",
+			"path": "/clearLog",
+			"public": false
+		},
+		"SendDeviceLog": {
+			"method": "post",
+			"path": "/SendDeviceLog",
+			"public": false
+		},
+		"sendInfoLog": {
+			"method": "post",
+			"path": "/sendInfoLog",
+			"public": false
+		}
+	},
+	"images": {
+		"small": "/assets/images/small.jpg",
+		"large": "/assets/images/large.jpg",
+		"xlarge": "/assets/images/xlarge.jpg"
+	},
+	"author": {
+		"name": "Adrian Rockall",
+		"email": "ady@rockall.plus.com"
+	},
+	"brandColor": "#020676"
 }

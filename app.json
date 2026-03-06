@@ -31,6 +31,33 @@
   },
   "source": "https://github.com/AdyRock/com.ambient.weather",
   "homeyCommunityTopicId": 55499,
+  "api": {
+    "getDeviceLog": {
+      "method": "get",
+      "path": "/getDeviceLog",
+      "public": false
+    },
+    "getInfoLog": {
+      "method": "get",
+      "path": "/getInfoLog",
+      "public": false
+    },
+    "clearLog": {
+      "method": "post",
+      "path": "/clearLog",
+      "public": false
+    },
+    "SendDeviceLog": {
+      "method": "post",
+      "path": "/SendDeviceLog",
+      "public": false
+    },
+    "sendInfoLog": {
+      "method": "post",
+      "path": "/sendInfoLog",
+      "public": false
+    }
+  },
   "images": {
     "small": "/assets/images/small.jpg",
     "large": "/assets/images/large.jpg",
@@ -2632,38 +2659,6 @@
       "id": "lightning"
     },
     {
-      "settings": [
-        {
-          "type": "group",
-          "label": {
-            "en": "Diagnostics"
-          },
-          "children": [
-            {
-              "id": "logEnabled",
-              "type": "checkbox",
-              "label": {
-                "en": "Enable Logging"
-              },
-              "value": true,
-              "hint": {
-                "en": "When enable the app will log communications with the Ambient server to help diagnose problems"
-              }
-            },
-            {
-              "id": "replyEmail",
-              "type": "text",
-              "label": {
-                "en": "Your email address (optional)"
-              },
-              "value": "",
-              "hint": {
-                "en": "If you don't supply your email address, logs will be sent anonymously, but you won't get a reply."
-              }
-            }
-          ]
-        }
-      ],
       "platforms": [
         "local"
       ],
@@ -2739,38 +2734,6 @@
       "id": "pm25"
     },
     {
-      "settings": [
-        {
-          "type": "group",
-          "label": {
-            "en": "Diagnostics"
-          },
-          "children": [
-            {
-              "id": "logEnabled",
-              "type": "checkbox",
-              "label": {
-                "en": "Enable Logging"
-              },
-              "value": true,
-              "hint": {
-                "en": "When enable the app will log communications with the Ambient server to help diagnose problems"
-              }
-            },
-            {
-              "id": "replyEmail",
-              "type": "text",
-              "label": {
-                "en": "Your email address (optional)"
-              },
-              "value": "",
-              "hint": {
-                "en": "If you don't supply your email address, logs will be sent anonymously, but you won't get a reply."
-              }
-            }
-          ]
-        }
-      ],
       "platforms": [
         "local"
       ],
@@ -2832,38 +2795,6 @@
       "id": "soil_moisture"
     },
     {
-      "settings": [
-        {
-          "type": "group",
-          "label": {
-            "en": "Diagnostics"
-          },
-          "children": [
-            {
-              "id": "logEnabled",
-              "type": "checkbox",
-              "label": {
-                "en": "Enable Logging"
-              },
-              "value": true,
-              "hint": {
-                "en": "When enable the app will log communications with the Ambient server to help diagnose problems"
-              }
-            },
-            {
-              "id": "replyEmail",
-              "type": "text",
-              "label": {
-                "en": "Your email address (optional)"
-              },
-              "value": "",
-              "hint": {
-                "en": "If you don't supply your email address, logs will be sent anonymously, but you won't get a reply."
-              }
-            }
-          ]
-        }
-      ],
       "platforms": [
         "local"
       ],
@@ -3035,38 +2966,6 @@
       "id": "station"
     },
     {
-      "settings": [
-        {
-          "type": "group",
-          "label": {
-            "en": "Diagnostics"
-          },
-          "children": [
-            {
-              "id": "logEnabled",
-              "type": "checkbox",
-              "label": {
-                "en": "Enable Logging"
-              },
-              "value": true,
-              "hint": {
-                "en": "When enable the app will log communications with the Ambient server to help diagnose problems"
-              }
-            },
-            {
-              "id": "replyEmail",
-              "type": "text",
-              "label": {
-                "en": "Your email address (optional)"
-              },
-              "value": "",
-              "hint": {
-                "en": "If you don't supply your email address, logs will be sent anonymously, but you won't get a reply."
-              }
-            }
-          ]
-        }
-      ],
       "platforms": [
         "local"
       ],

@@ -40,7 +40,6 @@
 		]
 	},
 	"$extends": [
-		"settingsCompose",
 		"globalCompose"
 	]
 }

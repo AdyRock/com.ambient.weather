@@ -11,5 +11,24 @@
 	"Hazardous": "Hazardous",
 	"logSendFailed": "Failed to send the log",
 	"logSent": "The log has been sent to the developer",
-	"logEmpty": "there is nothing to send. Make sure logging is enabled"
+	"logEmpty": "there is nothing to send. Make sure logging is enabled",
+	"settings": {
+		"settings": "Internet",
+		"detected": "Detected",
+		"diagnosticsLog": "Diagnostics Log",
+		"clear": "Clear Log",
+		"send": "Send Log",
+		"detectedDescription": "** Do not share this information publicly **",
+		"enableLog": "Log Enabled",
+		"confirmSend": "Send the log contents to the developer?\n** All identifiers will be removed **",
+		"logSent": "The log has been sent.",
+		"logSendFailed": "Failed to send after 5 attempts.\nThe error messages are at the end of the log.",
+		"getDevices": "Get Devices",
+		"enableLLogExplanation": "If enabled, the app will log a lot of diagnostics information.<br>The app will still log errors even if this is disabled.",
+		"emailExplanation": "If you want me to respond to your log, please enter your email address or forum id here so I know how to contact you.",
+		"description": "Description",
+		"descriptionExplanation": "Please enter a brief description of the problem if you are going to send the log.",
+		"email": "Email Address or Forum id",
+		"sendLogConfirm": "Send the log contents to the developer?"
+	}
 }

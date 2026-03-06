@@ -19,9 +19,10 @@ class MyApp extends Homey.App
 	 */
 	async onInit()
 	{
-		this.realTimeAPI = null;
+		this.realTimeAPI = [];
 		this.registeringRealTime = false;
 		this.realTimeSubKeys = [];
+		this.subscribedDevices = [];
 
 		this.homey.app.apiKey = this.homey.settings.get('APIToken');
 		if (!this.homey.app.apiKey)
@@ -241,10 +242,14 @@ class MyApp extends Homey.App
 
 	async onUninit()
 	{
-		if (this.realTimeAPI !== null)
+		if (this.realTimeAPI && this.realTimeAPI.length > 0)
 		{
-			this.realTimeAPI.unsubscribe(this.realTimeSubKeys);
-			this.realTimeAPI.disconnect();
+			// Unsubscribe from real time updates and disconnect
+			this.realTimeAPI.forEach((apiInstance) => {
+				apiInstance.unsubscribe(this.realTimeSubKeys);
+				apiInstance.disconnect();
+			});
+			this.realTimeAPI = [];
 		}
 	}
 
@@ -255,11 +260,22 @@ class MyApp extends Homey.App
 
 	async getAPIInstance(userAPIKey)
 	{
-		const applicationKey = Homey.env.AMBIENT_WEATHER_APPLICATION_KEY;
-		const apiInstance = new AmbientWeatherApi({ apiKey: userAPIKey, applicationKey });
+		// Find an existing API instance for the same API key
+		if (this.realTimeAPI.length > 0)
+		{
+			const existingInstance = this.realTimeAPI.find((apiInstance) => apiInstance.apiKey === userAPIKey);
+			if (existingInstance)
+			{
+				this.homey.app.updateLog('Reusing existing API instance');
+				return existingInstance;
+			}
+		}
 
-		this.homey.app.updateLog('Got new API instance');
-		return apiInstance;
+		const applicationKey = Homey.env.AMBIENT_WEATHER_APPLICATION_KEY;
+		this.realTimeAPI.push(new AmbientWeatherApi({ apiKey: userAPIKey, applicationKey }));
+
+		this.updateLog('Got new API instance');
+		return this.realTimeAPI[this.realTimeAPI.length - 1];
 	}
 
 	async getAPIData(userAPIKey, macAddress)
@@ -294,39 +310,33 @@ class MyApp extends Homey.App
 
 		this.realTimeSubKeys.push(userAPIKey);
 
-		// Setup real time notifications
-		if (this.realTimeAPI !== null)
-		{
-			// Already connected so just subscribe
-			this.realTimeAPI.subscribe(this.realTimeSubKeys);
-			this.registeringRealTime = false;
-			this.homey.app.updateLog('Registered realtime');
-			return;
-		}
-
 		// Create a connection
-		this.realTimeAPI = await this.getAPIInstance(userAPIKey);
-		this.realTimeAPI.connect();
+		const apiInstance = await this.getAPIInstance(userAPIKey);
+		apiInstance.connect();
 
-		this.realTimeAPI.on('connect', () =>
+		apiInstance.on('connect', () =>
 		{
 			this.homey.app.updateLog('Connected to Ambient Weather Realtime API!');
 
 			// Connected so subscribe
-			this.realTimeAPI.subscribe(this.realTimeSubKeys);
+			apiInstance.subscribe(this.realTimeSubKeys);
 		});
 
-		this.realTimeAPI.on('subscribed', (data) =>
+		apiInstance.on('subscribed', (data) =>
 		{
 			this.homey.app.updateLog(`Subscribed to ${data.devices.length} device(s): ${data.devices.map(getName).join(', ')}`, true);
-			this.homey.app.updateLog(`Subscribed to ${this.homey.app.varToString(data)}`);
+			this.homey.app.updateLog(`${this.homey.app.varToString(data)}`);
+			this.subscribedDevices.push(...data.devices);
 		});
 
-		this.realTimeAPI.on('data', (data) =>
+		apiInstance.on('data', (data) =>
 		{
 			this.homey.app.updateLog(`realtime data: ${this.homey.app.varToString(data)}`);
 			this.updateStationData(data);
 		});
+
+		// Setup real time notifications
+		apiInstance.subscribe(this.realTimeSubKeys);
 
 		this.registeringRealTime = false;
 		this.homey.app.updateLog('Registered realtime');
@@ -349,7 +359,7 @@ class MyApp extends Homey.App
 		}
 	}
 
-	varToString(source, includeStack = true)
+	varToString(source)
 	{
 		try
 		{
@@ -363,29 +373,41 @@ class MyApp extends Homey.App
 			}
 			if (source instanceof Error)
 			{
-				if (includeStack)
-				{
-					const stack = source.stack.replace('/\\n/g', '\n');
-					return `${source.message}\n${stack}`;
-				}
-				return source.message;
+				const stack = source.stack.replace('/\\n/g', '\n');
+				return `${source.message}\n${stack}`;
 			}
 			if (typeof (source) === 'object')
 			{
-				return JSON.stringify(source, null, 2);
+				const getCircularReplacer = () =>
+				{
+					const seen = new WeakSet();
+					return (key, value) =>
+					{
+						if (typeof value === 'object' && value !== null)
+						{
+							if (seen.has(value))
+							{
+								return '';
+							}
+							seen.add(value);
+						}
+						return value;
+					};
+				};
+
+				return JSON.stringify(source, getCircularReplacer(), 2);
 			}
 			if (typeof (source) === 'string')
 			{
 				return source;
 			}
-
-			return source.toString();
 		}
-		catch (error)
+		catch (err)
 		{
-			this.log('Error decoding message to a string', source);
-			return 'Error decoding message to a string';
+			this.updateLog(`VarToString Error: ${err.message}`);
 		}
+
+		return source.toString();
 	}
 
 	updateLogEnabledSetting(enabled)
@@ -468,76 +490,98 @@ class MyApp extends Homey.App
 		oldText += newMessage;
 		oldText += '\r\n\r\n';
 		this.homey.settings.set('diagLog', oldText);
+		this.homey.api.realtime('com.ambient.weather.logupdated', { log: oldText });
 	}
 
 	// Send the log to the developer (not applicable to Homey cloud)
-	async sendLog(logType, replyAddress)
+	async sendLog({ email = '', description = '', log = '' })
 	{
 		let tries = 5;
-
-		let logData;
-		if (logType === 'diag')
-		{
-			logData = this.homey.settings.get('diagLog');
-		}
-
-		if (!logData)
-		{
-			throw new Error(this.homey.__('logEmpty'));
-		}
-
-		let lastError = '';
-
+		let error = null;
 		while (tries-- > 0)
 		{
 			try
 			{
-				lastError = '';
-
 				// create reusable transporter object using the default SMTP transport
 				const transporter = nodemailer.createTransport(
-				{
-					host: Homey.env.MAIL_HOST, // Homey.env.MAIL_HOST,
-					port: 465,
-					ignoreTLS: false,
-					secure: true, // true for 465, false for other ports
-					auth:
 					{
-						user: Homey.env.MAIL_USER, // generated ethereal user
-						pass: Homey.env.MAIL_SECRET, // generated ethereal password
+						host: Homey.env.MAIL_HOST, // Homey.env.MAIL_HOST,
+						port: 465,
+						ignoreTLS: false,
+						secure: true, // true for 465, false for other ports
+						auth:
+						{
+							user: Homey.env.MAIL_USER, // generated ethereal user
+							pass: Homey.env.MAIL_SECRET, // generated ethereal password
+						},
+						tls:
+						{
+							// do not fail on invalid certs
+							rejectUnauthorized: false,
+						},
 					},
-					tls:
-					{
-						// do not fail on invalid certs
-						rejectUnauthorized: false,
-					},
-				},
 				);
 
 				// send mail with defined transport object
-				await transporter.sendMail(
-				{
-					from: `"Homey User" <${Homey.env.MAIL_USER}>`, // sender address
-					to: Homey.env.MAIL_RECIPIENT, // list of receivers
-					cc: replyAddress,
-					subject: `Ambient Weather ${logType} log`, // Subject line
-					text: logData, // plain text body
-				},
+				const info = await transporter.sendMail(
+					{
+						from: `"Homey User" <${Homey.env.MAIL_USER}>`, // sender address
+						to: Homey.env.MAIL_RECIPIENT, // list of receivers
+						cc: email,
+						subject: `Ambient Weather log (${Homey.manifest.version})`, // Subject line
+						text: `${email}\n${description}\n\n${log}`, // plain text body
+					},
 				);
 
-				return this.homey.__('logSent');
+				this.updateLog(`Message sent: ${info.messageId}`);
+				// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+				// Preview only available when sending through an Ethereal account
+				this.log('Preview URL: ', nodemailer.getTestMessageUrl(info));
+				return this.homey.__('settings.logSent');
 			}
 			catch (err)
 			{
-				lastError = err.message;
+				this.updateLog(`Send log error: ${err.message}`, 0);
+				error = err;
 			}
 		}
 
-		if (lastError !== '')
+		throw new Error(this.homey.__('settings.logSendFailed') + error.message);
+	}
+
+	async getDeviceList()
+	{
+		const subList = this.varToString(this.subscribedDevices);
+
+		// Obfuscate the API key in the output
+		const apiKeyIndex = subList.indexOf('apiKey=');
+		let obfuscatedList = subList;
+		if (apiKeyIndex > 0)
 		{
-			throw new Error(lastError);
+			obfuscatedList = `${subList.substring(0, apiKeyIndex + 7)}****${subList.substring(apiKeyIndex + 11)}`;
 		}
-		return this.homey.__('logSendFailed');
+		return obfuscatedList;
+	}
+
+	getLog()
+	{
+		const logText = this.homey.settings.get('diagLog');
+
+		// Obfuscate the API key in the output
+		const apiKeyIndex = logText.indexOf('apiKey=');
+		let obfuscatedLog = logText;
+		if (apiKeyIndex > 0)
+		{
+			obfuscatedLog = `${logText.substring(0, apiKeyIndex + 7)}****${logText.substring(apiKeyIndex + 11)}`;
+		}
+		return obfuscatedLog;
+	}
+
+	clearLog()
+	{
+		this.homey.settings.set('diagLog', '');
+		this.homey.api.realtime('com.ambient.weather.logupdated', { log: '' });
 	}
 
 }

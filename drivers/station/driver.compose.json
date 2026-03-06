@@ -136,7 +136,6 @@
 		}
 	},
 	"$extends": [
-		"settingsCompose",
 		"globalCompose"
 	]
 }

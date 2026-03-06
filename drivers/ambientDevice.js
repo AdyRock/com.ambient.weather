@@ -33,7 +33,6 @@ class AmbientDevice extends Homey.Device
 		{
 			const apiKey = this.getSetting('apiKey');
 			this.getStationData(apiKey);
-			this.pollStationData();
 		}, timeout);
 	}
 
