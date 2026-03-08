@@ -326,6 +326,9 @@ class MyApp extends Homey.App
 		{
 			this.homey.app.updateLog(`Subscribed to ${data.devices.length} device(s): ${data.devices.map(getName).join(', ')}`, true);
 			this.homey.app.updateLog(`${this.homey.app.varToString(data)}`);
+			data.devices.forEach((device) => {
+				device.apiKey = '****';
+			});
 			this.subscribedDevices.push(...data.devices);
 		});
 
@@ -410,6 +413,38 @@ class MyApp extends Homey.App
 		return source.toString();
 	}
 
+	sanitizeApiKeys(source)
+	{
+		if (source === null || source === undefined)
+		{
+			return source;
+		}
+
+		let sanitized = source;
+		if (typeof sanitized !== 'string')
+		{
+			sanitized = this.varToString(sanitized);
+		}
+
+		// JSON style with quoted value: "apiKey": "..."
+		sanitized = sanitized.replace(/("apiKey"\s*:\s*)"([^"\\]*(?:\\.[^"\\]*)*)"/gi, '$1"****"');
+
+		// JSON-like style with unquoted value: "apiKey": value
+		sanitized = sanitized.replace(/("apiKey"\s*:\s*)([^,\r\n}\]]+)/gi, (match, prefix, value) =>
+		{
+			if ((value || '').trim().startsWith('"'))
+			{
+				return match;
+			}
+			return `${prefix}"****"`;
+		});
+
+		// Query-string style: apiKey=...
+		sanitized = sanitized.replace(/(apiKey=)[^&;\s\r\n]*/gi, '$1****');
+
+		return sanitized;
+	}
+
 	updateLogEnabledSetting(enabled)
 	{
 		this.homey.settings.set('logEnabled', enabled);
@@ -430,6 +465,8 @@ class MyApp extends Homey.App
 
 	updateLog(newMessage, isError = false)
 	{
+		const sanitizedMessage = this.sanitizeApiKeys(newMessage);
+
 		// Maximum size of the log in characters
 		let maxSize = 30000;
 		if (!this.homey.settings.get('logEnabled'))
@@ -443,14 +480,7 @@ class MyApp extends Homey.App
 			maxSize = 5000;
 		}
 
-		this.log(newMessage);
-
-		// Remove the API key from the output
-		const apiKeyIndex = newMessage.indexOf('apiKey=');
-		if (apiKeyIndex > 0)
-		{
-			newMessage = newMessage.substring(0, apiKeyIndex + 7);
-		}
+		this.log(sanitizedMessage);
 
 		let oldText = this.homey.settings.get('diagLog');
 		if (!oldText)
@@ -461,7 +491,7 @@ class MyApp extends Homey.App
 		if (oldText.length > maxSize)
 		{
 			// Remove characters from the beginning to make space for the new message.
-			oldText = oldText.substring(newMessage.length + 20);
+			oldText = oldText.substring(sanitizedMessage.length + 20);
 			const n = oldText.indexOf('\n');
 			if (n >= 0)
 			{
@@ -487,7 +517,7 @@ class MyApp extends Homey.App
 		oldText += '\r\n  ';
 
 		oldText += '* ';
-		oldText += newMessage;
+		oldText += sanitizedMessage;
 		oldText += '\r\n\r\n';
 		this.homey.settings.set('diagLog', oldText);
 		this.homey.api.realtime('com.ambient.weather.logupdated', { log: oldText });
@@ -553,29 +583,13 @@ class MyApp extends Homey.App
 	async getDeviceList()
 	{
 		const subList = this.varToString(this.subscribedDevices);
-
-		// Obfuscate the API key in the output
-		const apiKeyIndex = subList.indexOf('apiKey=');
-		let obfuscatedList = subList;
-		if (apiKeyIndex > 0)
-		{
-			obfuscatedList = `${subList.substring(0, apiKeyIndex + 7)}****${subList.substring(apiKeyIndex + 11)}`;
-		}
-		return obfuscatedList;
+		return this.sanitizeApiKeys(subList);
 	}
 
 	getLog()
 	{
-		const logText = this.homey.settings.get('diagLog');
-
-		// Obfuscate the API key in the output
-		const apiKeyIndex = logText.indexOf('apiKey=');
-		let obfuscatedLog = logText;
-		if (apiKeyIndex > 0)
-		{
-			obfuscatedLog = `${logText.substring(0, apiKeyIndex + 7)}****${logText.substring(apiKeyIndex + 11)}`;
-		}
-		return obfuscatedLog;
+		const logText = this.homey.settings.get('diagLog') || '';
+		return this.sanitizeApiKeys(logText);
 	}
 
 	clearLog()

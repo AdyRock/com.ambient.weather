@@ -37,5 +37,8 @@
 	},
 	"1.0.12": {
 		"en": "Increase polling time to 2 minutes to keep within API rate limits."
+	},
+	"1.0.13": {
+		"en": "Move diagnostic log to the app settings. Reuse AW API client to reduce number of connections. Increase polling time to 5 minutes plus a random delay of up to 30 seconds to keep within API rate limits."
 	}
 }

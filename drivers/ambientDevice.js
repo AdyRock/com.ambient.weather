@@ -20,14 +20,17 @@ class AmbientDevice extends Homey.Device
 
 	async pollStationData()
 	{
-		// First time we poll immediately, then we wait 2 minutes to keep withing the API rate limits. If the timer already exists, we clear it and start a new one for 2 minutes.
-		let timeout = 100;
+		// First time we poll immediately, then we wait 5 minutes to keep within the API rate limits. If the timer already exists, we clear it and start a new one for 5 minutes.
+		let timeout = 1000;
 		if (this.pollTimer)
 		{
 			this.homey.clearTimeout(this.pollTimer);
-			timeout = 1000 * 60 * 2; // 2 minutes
+			timeout = 1000 * 60 * 5; // 5 minutes
 			this.pollTimer = null;
 		}
+
+		// Add a random delay of up to 30 seconds to avoid all devices polling at the same time
+		timeout += Math.floor(Math.random() * 1000 * 30);
 
 		this.pollTimer = this.homey.setTimeout(() =>
 		{
