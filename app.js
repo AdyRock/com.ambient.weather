@@ -445,24 +445,6 @@ class MyApp extends Homey.App
 		return sanitized;
 	}
 
-	updateLogEnabledSetting(enabled)
-	{
-		this.homey.settings.set('logEnabled', enabled);
-
-		const drivers = this.homey.drivers.getDrivers();
-		for (const driver of Object.values(drivers))
-		{
-			const devices = driver.getDevices();
-			for (const device of Object.values(devices))
-			{
-				if (device.updateLogEnabledSetting)
-				{
-					device.updateLogEnabledSetting(enabled);
-				}
-			}
-		}
-	}
-
 	updateLog(newMessage, isError = false)
 	{
 		const sanitizedMessage = this.sanitizeApiKeys(newMessage);

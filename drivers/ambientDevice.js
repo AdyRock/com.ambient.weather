@@ -7,10 +7,17 @@ const Homey = require('homey');
 class AmbientDevice extends Homey.Device
 {
 
+	/**
+	 * Typed app accessor so editor navigation can resolve methods defined in app.js.
+	 * @returns {import('../app')}
+	 */
+	get app()
+	{
+		return this.homey.app;
+	}
+
 	async onInit()
 	{
-		this.updateLogEnabledSetting(this.homey.settings.get('logEnabled'));
-
 		this.macAddress = this.getData().id;
 		// Setup real time notifications
 		const apiKey = this.getSetting('apiKey');
@@ -51,18 +58,6 @@ class AmbientDevice extends Homey.Device
 		this.log('Device has been added');
 	}
 
-	updateLogEnabledSetting(enabled)
-	{
-		if (enabled)
-		{
-			this.setSettings({ logEnabled: true });
-		}
-		else
-		{
-			this.setSettings({ logEnabled: false });
-		}
-	}
-
 	/**
 	 * onSettings is called when the user updates the device's settings.
 	 * @param {object} event the onSettings event data
@@ -73,19 +68,13 @@ class AmbientDevice extends Homey.Device
 	 */
 	async onSettings({ oldSettings, newSettings, changedKeys })
 	{
-		if (changedKeys.indexOf('logEnabled') >= 0)
-		{
-			setImmediate(() =>
-			{
-				this.homey.app.updateLogEnabledSetting(newSettings.logEnabled);
-			});
-		}
+		this.log('Device settings have been updated');
 	}
 
 	async getStationData(apiKey)
 	{
-		const stationDataArray = await this.homey.app.getAPIData(apiKey, this.macAddress);
-		this.homey.app.updateLog(`getStationData: ${this.homey.app.varToString(stationDataArray)}`);
+		const stationDataArray = await this.app.getAPIData(apiKey, this.macAddress);
+		this.app.updateLog(`getStationData: ${this.app.varToString(stationDataArray)}`);
 		if (stationDataArray && Array.isArray(stationDataArray) && (stationDataArray.length > 0))
 		{
 			const stationData = stationDataArray[0];
@@ -123,7 +112,7 @@ class AmbientDevice extends Homey.Device
 
 	async onCapabilitySendLog(value)
 	{
-		this.homey.app.sendLog('diag', this.getSetting('replyEmail')).catch(this.error);
+		this.app.sendLog('diag', this.getSetting('replyEmail')).catch(this.error);
 	}
 
 }
