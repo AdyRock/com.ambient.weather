@@ -102,21 +102,23 @@ class LightningDevice extends AmbientDevice
 	{
 		if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
 		{
-			// Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes.
-			this.pollStationData();
+			const deviceData = stationData.lastData;
 
-			this.setCapability('measure_lightning', stationData.lightning_distance, addRemove);
-			this.setCapability('measure_lightning_num', stationData.lightning_day, addRemove);
-
-			const settings = this.getSettings();
-			if (stationData.lightning_time !== '')
+			if (deviceData)
 			{
-				this.lightning_time = stationData.lightning_time;
-				this.setStoreValue('lightning_time', this.lightning_time).catch(this.error);
-				this.setCapability('measure_lightning_time', this.convertDate(this.lightning_time, settings), addRemove);
-			}
+				this.setCapability('measure_lightning', deviceData.lightning_distance, addRemove);
+				this.setCapability('measure_lightning_num', deviceData.lightning_day, addRemove);
 
-			this.setCapability('alarm_battery', stationData.batt_lightning === 0, addRemove);
+				const settings = this.getSettings();
+				if (deviceData.lightning_time !== '')
+				{
+					this.lightning_time = deviceData.lightning_time;
+					this.setStoreValue('lightning_time', this.lightning_time).catch(this.error);
+					this.setCapability('measure_lightning_time', this.convertDate(this.lightning_time, settings), addRemove);
+				}
+
+				this.setCapability('alarm_battery', deviceData.batt_lightning === 0, addRemove);
+			}
 		}
 	}
 

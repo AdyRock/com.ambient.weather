@@ -46,71 +46,77 @@ class StationDevice extends AmbientDevice
 	{
 		if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
 		{
-			// Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes.
-			this.pollStationData();
-
-			this.setCapability('measure_temperature', (stationData.tempf !== undefined) ? (((stationData.tempf - 32) * 5) / 9) : stationData.tempf, addRemove);
-			this.setCapability('measure_temperature.feelsLike', (stationData.feelsLike !== undefined) ? (((stationData.feelsLike - 32) * 5) / 9) : stationData.feelsLike, addRemove);
-			this.setCapability('measure_temperature.dewPoint', (stationData.dewPoint !== undefined) ? (((stationData.dewPoint - 32) * 5) / 9) : stationData.dewPoint, addRemove);
-			this.setCapability('measure_humidity', stationData.humidity, addRemove);
-
-			this.setCapability('measure_wind_angle', stationData.winddir, addRemove);
-			this.setCapability('measure_wind_strength', (stationData.windspeedmph !== undefined) ? (stationData.windspeedmph * 1.609344) : stationData.windspeedmph, addRemove);
-			this.setCapability('measure_wind_strength.avg2m', (stationData.windspdmph_avg2m !== undefined) ? (stationData.windspdmph_avg2m * 1.609344) : stationData.windspdmph_avg2m, addRemove);
-			this.setCapability('measure_wind_angle.avg2m', stationData.winddir_avg2m, addRemove);
-			this.setCapability('measure_wind_strength.avg10m', (stationData.windspdmph_avg10m !== undefined) ? (stationData.windspdmph_avg10m * 1.609344) : stationData.windspdmph_avg10m, addRemove);
-			this.setCapability('measure_wind_angle.avg10m', stationData.winddir_avg10m, addRemove);
-
-			this.setCapability('measure_gust_angle', stationData.windgustdir, addRemove);
-			this.setCapability('measure_gust_strength', (stationData.windgustmph !== undefined) ? (stationData.windgustmph * 1.609344) : stationData.windgustmph, addRemove);
-			this.setCapability('measure_gust_strength.daily', (stationData.maxdailygust !== undefined) ? (stationData.maxdailygust * 1.609344) : stationData.maxdailygust, addRemove);
-
-			this.setCapability('measure_radiation', stationData.solarradiation, addRemove);
-			this.setCapability('measure_ultraviolet', stationData.uv, addRemove);
-
-			this.setCapability('measure_rain', (stationData.eventrainin !== undefined) ? (stationData.eventrainin * 25.4) : stationData.eventrainin, addRemove);
-			this.setCapability('measure_rain.rate', (stationData.hourlyrainin !== undefined) ? (stationData.hourlyrainin * 25.4) : stationData.hourlyrainin, addRemove);
-			this.setCapability('measure_rain.total', (stationData.totalrainin !== undefined) ? (stationData.totalrainin * 25.4) : stationData.totalrainin, addRemove);
-			this.setCapability('measure_rain.today', (stationData.dailyrainin !== undefined) ? (stationData.dailyrainin * 25.4) : stationData.dailyrainin, addRemove);
-			this.setCapability('measure_rain.period24', (stationData['24hourrainin'] !== undefined) ? (stationData['24hourrainin'] * 25.4) : stationData['24hourrainin'], addRemove);
-			this.setCapability('measure_rain.week', (stationData.weeklyrainin !== undefined) ? (stationData.weeklyrainin * 25.4) : stationData.weeklyrainin, addRemove);
-			this.setCapability('measure_rain.month', (stationData.monthlyrainin !== undefined) ? (stationData.monthlyrainin * 25.4) : stationData.monthlyrainin, addRemove);
-			this.setCapability('measure_rain.year', (stationData.yearlyrainin !== undefined) ? (stationData.yearlyrainin * 25.4) : stationData.yearlyrainin, addRemove);
-
-			this.setCapability('alarm_battery', (stationData.battout !== undefined) ? (stationData.battout === 0) : stationData.battout, addRemove);
-
-			if (stationData.lastRain)
+			let deviceData = stationData.lastData;
+			if (!deviceData)
 			{
-				this.lastRainDate = new Date(stationData.lastRain);
+				deviceData = stationData[0];
+			}
 
-				// Allow for Homey's timezone setting
-				const tzString = this.homey.clock.getTimezone();
-				const lastRainDate = new Date(this.lastRainDate.toLocaleString('en-US', { timeZone: tzString }));
+			if (deviceData)
+			{
+				this.setCapability('measure_temperature', (deviceData.tempf !== undefined) ? (((deviceData.tempf - 32) * 5) / 9) : deviceData.tempf, addRemove);
+				this.setCapability('measure_temperature.feelsLike', (deviceData.feelsLike !== undefined) ? (((deviceData.feelsLike - 32) * 5) / 9) : deviceData.feelsLike, addRemove);
+				this.setCapability('measure_temperature.dewPoint', (deviceData.dewPoint !== undefined) ? (((deviceData.dewPoint - 32) * 5) / 9) : deviceData.dewPoint, addRemove);
+				this.setCapability('measure_humidity', deviceData.humidity, addRemove);
 
-				// Get the date using the short month format
-				const formatString = { year: 'numeric', month: 'short', day: '2-digit', hour12: false, hour: '2-digit', minute: '2-digit' };
-				const date = lastRainDate.toLocaleDateString(this.langCode, formatString);
-				this.setCapabilityValue('last_rain_event', date);
+				this.setCapability('measure_wind_angle', deviceData.winddir, addRemove);
+				this.setCapability('measure_wind_strength', (deviceData.windspeedmph !== undefined) ? (deviceData.windspeedmph * 1.609344) : deviceData.windspeedmph, addRemove);
+				this.setCapability('measure_wind_strength.avg2m', (deviceData.windspdmph_avg2m !== undefined) ? (deviceData.windspdmph_avg2m * 1.609344) : deviceData.windspdmph_avg2m, addRemove);
+				this.setCapability('measure_wind_angle.avg2m', deviceData.winddir_avg2m, addRemove);
+				this.setCapability('measure_wind_strength.avg10m', (deviceData.windspdmph_avg10m !== undefined) ? (deviceData.windspdmph_avg10m * 1.609344) : deviceData.windspdmph_avg10m, addRemove);
+				this.setCapability('measure_wind_angle.avg10m', deviceData.winddir_avg10m, addRemove);
 
-				const hours = this.getHoursSinceLatRained();
-				if (hours !== this.hoursSinceLastRain)
+				this.setCapability('measure_gust_angle', deviceData.windgustdir, addRemove);
+				this.setCapability('measure_gust_strength', (deviceData.windgustmph !== undefined) ? (deviceData.windgustmph * 1.609344) : deviceData.windgustmph, addRemove);
+				this.setCapability('measure_gust_strength.daily', (deviceData.maxdailygust !== undefined) ? (deviceData.maxdailygust * 1.609344) : deviceData.maxdailygust, addRemove);
+
+				this.setCapability('measure_radiation', deviceData.solarradiation, addRemove);
+				this.setCapability('measure_ultraviolet', deviceData.uv, addRemove);
+
+				this.setCapability('measure_rain', (deviceData.eventrainin !== undefined) ? (deviceData.eventrainin * 25.4) : deviceData.eventrainin, addRemove);
+				this.setCapability('measure_rain.rate', (deviceData.hourlyrainin !== undefined) ? (deviceData.hourlyrainin * 25.4) : deviceData.hourlyrainin, addRemove);
+				this.setCapability('measure_rain.total', (deviceData.totalrainin !== undefined) ? (deviceData.totalrainin * 25.4) : deviceData.totalrainin, addRemove);
+				this.setCapability('measure_rain.today', (deviceData.dailyrainin !== undefined) ? (deviceData.dailyrainin * 25.4) : deviceData.dailyrainin, addRemove);
+				this.setCapability('measure_rain.period24', (deviceData['24hourrainin'] !== undefined) ? (deviceData['24hourrainin'] * 25.4) : deviceData['24hourrainin'], addRemove);
+				this.setCapability('measure_rain.week', (deviceData.weeklyrainin !== undefined) ? (deviceData.weeklyrainin * 25.4) : deviceData.weeklyrainin, addRemove);
+				this.setCapability('measure_rain.month', (deviceData.monthlyrainin !== undefined) ? (deviceData.monthlyrainin * 25.4) : deviceData.monthlyrainin, addRemove);
+				this.setCapability('measure_rain.year', (deviceData.yearlyrainin !== undefined) ? (deviceData.yearlyrainin * 25.4) : deviceData.yearlyrainin, addRemove);
+
+				this.setCapability('alarm_battery', (deviceData.battout !== undefined) ? (deviceData.battout === 0) : deviceData.battout, addRemove);
+
+				if (deviceData.lastRain)
 				{
-					this.hoursSinceLastRain = hours;
-					const tokens = {
-						hours,
-					};
+					this.lastRainDate = new Date(deviceData.lastRain);
 
-					const state = {
-						value: hours,
-					};
+					// Allow for Homey's timezone setting
+					const tzString = this.homey.clock.getTimezone();
+					const lastRainDate = new Date(this.lastRainDate.toLocaleString('en-US', { timeZone: tzString }));
 
-					this.driver.TriggerHoursSinceRained(this, tokens, state);
+					// Get the date using the short month format
+					const formatString = { year: 'numeric', month: 'short', day: '2-digit', hour12: false, hour: '2-digit', minute: '2-digit' };
+					const date = lastRainDate.toLocaleDateString(this.langCode, formatString);
+					this.setCapabilityValue('last_rain_event', date);
+
+					const hours = this.getHoursSinceLastRained();
+					if (hours !== this.hoursSinceLastRain)
+					{
+						this.hoursSinceLastRain = hours;
+						const tokens = {
+							hours,
+						};
+
+						const state = {
+							value: hours,
+						};
+
+						this.driver.TriggerHoursSinceRained(this, tokens, state);
+					}
 				}
 			}
 		}
 	}
 
-	getHoursSinceLatRained()
+	getHoursSinceLastRained()
 	{
 		const now = new Date();
 		const diff = now - this.lastRainDate;

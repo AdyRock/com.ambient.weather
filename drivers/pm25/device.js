@@ -52,61 +52,63 @@ class PM25Device extends AmbientDevice
 	{
 		if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
 		{
-			// Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes.
-			this.pollStationData();
+			const deviceData = stationData.lastData;
 
-			const pm25 = stationData[`pm25${this.inOut}`];
-			this.setCapability('measure_pm25', pm25, addRemove);
-
-			const pm25Avg = stationData[`pm25${this.inOut}_24h`];
-			this.setCapability('measure_pm25.avg', pm25Avg, addRemove);
-
-			if (pm25)
+			if (deviceData)
 			{
-				// Calculate AQI
-				let tableIdx = AQITable.findIndex((entry) => entry.ConcHi > pm25);
+				const pm25 = deviceData[`pm25${this.inOut}`];
+				this.setCapability('measure_pm25', pm25, addRemove);
 
-				// If the value is above the highest value in the table, use the highest value
-				if (tableIdx === -1)
+				const pm25Avg = deviceData[`pm25${this.inOut}_24h`];
+				this.setCapability('measure_pm25.avg', pm25Avg, addRemove);
+
+				if (pm25)
 				{
-					tableIdx = AQITable.length - 1;
+					// Calculate AQI
+					let tableIdx = AQITable.findIndex((entry) => entry.ConcHi > pm25);
+
+					// If the value is above the highest value in the table, use the highest value
+					if (tableIdx === -1)
+					{
+						tableIdx = AQITable.length - 1;
+					}
+
+					const AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25 - AQITable[tableIdx].ConcLo) + AQITable[tableIdx].AQIlo;
+
+					this.setCapability('measure_aqi', AQI, addRemove);
+					const aqText = this.homey.__(AQITable[tableIdx].name);
+					if (aqText !== this.getCapabilityValue('measure_aq'))
+					{
+						this.setCapability('measure_aq', aqText, addRemove);
+
+						const tokens = {
+							measure_aq_name: aqText,
+							measure_aq_item: tableIdx,
+						};
+
+						const state = {
+							value: tableIdx,
+						};
+
+						this.driver.triggerAQChanged(this, tokens, state);
+					}
 				}
 
-				const AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25 - AQITable[tableIdx].ConcLo) + AQITable[tableIdx].AQIlo;
-
-				this.setCapability('measure_aqi', AQI, addRemove);
-				const aqText = this.homey.__(AQITable[tableIdx].name);
-				if (aqText !== this.getCapabilityValue('measure_aq'))
+				if (pm25Avg)
 				{
-					this.setCapability('measure_aq', aqText, addRemove);
+					// Calculate AQI Avg
+					const tableIdx = AQITable.findIndex((entry) => entry.ConcHi > pm25Avg);
+					if ((tableIdx >= 0) && (tableIdx < AQITable.length))
+					{
+						const AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25Avg - AQITable[tableIdx].ConcLo)  + AQITable[tableIdx].AQIlo;
 
-					const tokens = {
-						measure_aq_name: aqText,
-						measure_aq_item: tableIdx,
-					};
-
-					const state = {
-						value: tableIdx,
-					};
-
-					this.driver.triggerAQChanged(this, tokens, state);
+						this.setCapability('measure_aqi.avg', AQI, addRemove);
+						this.setCapability('measure_aq.avg', this.homey.__(AQITable[tableIdx].name), addRemove);
+					}
 				}
+
+				this.setCapability('alarm_battery', (deviceData[`bat_25${this.inOut}`] !== undefined) ? (deviceData[`bat_25${this.inOut}`] === 0) : deviceData[`bat_25${this.inOut}`], addRemove);
 			}
-
-			if (pm25Avg)
-			{
-				// Calculate AQI Ag
-				const tableIdx = AQITable.findIndex((entry) => entry.ConcHi > pm25Avg);
-				if ((tableIdx >= 0) && (tableIdx < AQITable.length))
-				{
-					const AQI = ((AQITable[tableIdx].AQIhi - AQITable[tableIdx].AQIlo) / (AQITable[tableIdx].ConcHi - AQITable[tableIdx].ConcLo)) * (pm25Avg - AQITable[tableIdx].ConcLo)  + AQITable[tableIdx].AQIlo;
-
-					this.setCapability('measure_aqi.avg', AQI, addRemove);
-					this.setCapability('measure_aq.avg', this.homey.__(AQITable[tableIdx].name), addRemove);
-				}
-			}
-
-			this.setCapability('alarm_battery', (stationData[`bat_25${this.inOut}`] !== undefined) ? (stationData[`bat_25${this.inOut}`] === 0) : stationData[`bat_25${this.inOut}`], addRemove);
 		}
 	}
 

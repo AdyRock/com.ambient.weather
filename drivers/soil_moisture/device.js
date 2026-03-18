@@ -42,12 +42,14 @@ class SoilMoistureDevice extends AmbientDevice
     {
         if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
         {
-			// Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes.
-			this.pollStationData();
+			const deviceData = stationData.lastData;
 
-            this.setCapability('measure_moisture', stationData[`soilhum${this.deviceID}`], addRemove);
-            this.setCapability('measure_temperature', (stationData[`soiltemp${this.deviceID}f`] !== undefined) ? (((stationData[`soiltemp${this.deviceID}f`] - 32) * 5) / 9) : stationData[`soiltemp${this.deviceID}f`], addRemove);
-            this.setCapability('alarm_battery', (stationData[`battsm${this.deviceID}`] !== undefined) ? (stationData[`battsm${this.deviceID}`] === 0) : stationData[`battsm${this.deviceID}`], addRemove);
+			if (deviceData)
+			{
+				this.setCapability('measure_moisture', deviceData[`soilhum${this.deviceID}`], addRemove);
+				this.setCapability('measure_temperature', (deviceData[`soiltemp${this.deviceID}f`] !== undefined) ? (((deviceData[`soiltemp${this.deviceID}f`] - 32) * 5) / 9) : deviceData[`soiltemp${this.deviceID}f`], addRemove);
+				this.setCapability('alarm_battery', (deviceData[`battsm${this.deviceID}`] !== undefined) ? (deviceData[`battsm${this.deviceID}`] === 0) : deviceData[`battsm${this.deviceID}`], addRemove);
+			}
         }
     }
 

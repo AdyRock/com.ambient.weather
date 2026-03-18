@@ -22,28 +22,6 @@ class AmbientDevice extends Homey.Device
 		// Setup real time notifications
 		const apiKey = this.getSetting('apiKey');
 		this.homey.app.registerRealTime(apiKey);
-		this.pollStationData();
-	}
-
-	async pollStationData()
-	{
-		// First time we poll immediately, then we wait 5 minutes to keep within the API rate limits. If the timer already exists, we clear it and start a new one for 5 minutes.
-		let timeout = 1000;
-		if (this.pollTimer)
-		{
-			this.homey.clearTimeout(this.pollTimer);
-			timeout = 1000 * 60 * 5; // 5 minutes
-			this.pollTimer = null;
-		}
-
-		// Add a random delay of up to 30 seconds to avoid all devices polling at the same time
-		timeout += Math.floor(Math.random() * 1000 * 30);
-
-		this.pollTimer = this.homey.setTimeout(() =>
-		{
-			const apiKey = this.getSetting('apiKey');
-			this.getStationData(apiKey);
-		}, timeout);
 	}
 
 	/**
@@ -52,8 +30,7 @@ class AmbientDevice extends Homey.Device
 	async onAdded()
 	{
 		// // Initialise with the current data
-		// const apiKey = this.getSetting('apiKey');
-		// this.getStationData(apiKey);
+		// this.getStationData();
 
 		this.log('Device has been added');
 	}
@@ -71,18 +48,25 @@ class AmbientDevice extends Homey.Device
 		this.log('Device settings have been updated');
 	}
 
-	async getStationData(apiKey)
+	async getStationData()
 	{
-		const stationDataArray = await this.app.getAPIData(apiKey, this.macAddress);
-		this.app.updateLog(`getStationData: ${this.app.varToString(stationDataArray)}`);
+		const apiKey = this.getSetting('apiKey');
+		const stationDataArray = await this.homey.app.getStationData(apiKey, this.macAddress);
 		if (stationDataArray && Array.isArray(stationDataArray) && (stationDataArray.length > 0))
 		{
-			const stationData = stationDataArray[0];
-			this.updateStationData(stationData, true);
-			return true;
+			// Update each device with the stationDataArray, the devices will pick the relevant data based on their macAddress.
+			for (const stationData of stationDataArray)
+			{
+				const data = {};
+				data.lastData = stationData;
+				data.macAddress = stationData.macAddress;
+				this.updateStationData(data, true);
+			}
 		}
-
-		return false;
+		else if (stationDataArray)
+		{
+			this.updateStationData(stationDataArray, true);
+		}
 	}
 
 	setCapability(capability, value, addRemove)

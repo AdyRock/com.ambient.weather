@@ -5,6 +5,8 @@ const Homey = require('homey');
 const nodemailer = require('nodemailer');
 const AmbientWeatherApi = require('ambient-weather-api');
 
+const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
+
 if (process.env.DEBUG === '1')
 {
 	// eslint-disable-next-line node/no-unsupported-features/node-builtins, global-require
@@ -237,6 +239,12 @@ class MyApp extends Homey.App
 			return value < args.value;
 		});
 
+		// Start polling timer to update devices every 5 minutes in case we miss real time updates or the device doesn't support real time updates.
+		this.pollingInterval = this.homey.setInterval(() =>
+		{
+			this.pollData();
+		}, POLLING_INTERVAL);
+
 		this.log('MyApp has been initialized');
 	}
 
@@ -326,27 +334,68 @@ class MyApp extends Homey.App
 		{
 			this.homey.app.updateLog(`Subscribed to ${data.devices.length} device(s): ${data.devices.map(getName).join(', ')}`, true);
 			this.homey.app.updateLog(`${this.homey.app.varToString(data)}`);
-			data.devices.forEach((device) => {
-				device.apiKey = '****';
+			data.devices.forEach((device) =>
+			{
+				this.updateStationData(device);
 			});
-			this.subscribedDevices.push(...data.devices);
 		});
 
 		apiInstance.on('data', (data) =>
 		{
 			this.homey.app.updateLog(`realtime data: ${this.homey.app.varToString(data)}`);
-			this.updateStationData(data);
-		});
 
-		// Setup real time notifications
-		apiInstance.subscribe(this.realTimeSubKeys);
+			// call updateStationData for each device in the data array to update the devices with the new data.
+			data.devices.forEach((device) => {
+				this.updateStationData(device);
+			});
+		});
 
 		this.registeringRealTime = false;
 		this.homey.app.updateLog('Registered realtime');
 	}
 
+	async pollData()
+	{
+		this.homey.app.updateLog('Polling data for all devices');
+		const drivers = this.homey.drivers.getDrivers();
+		for (const driver of Object.values(drivers))
+		{
+			const devices = driver.getDevices();
+			for (const device of Object.values(devices))
+			{
+				if (device.getStationData)
+				{
+					await device.getStationData();
+				}
+			}
+		}
+	}
+
 	updateStationData(data)
 	{
+		// Check the data array to see if we have already fetched the data for this macAddress and update the data for the devices with the new data.
+		if (data && data.macAddress)
+		{
+			// add the lastDataReceived timestamp to the data so we know when we received the last update for this device.
+			data.lastDataReceived = new Date();
+
+			// Update the data in the array so if a device is added later with this macAddress it can get the latest data without needing to fetch it again.
+			const stationData = this.subscribedDevices.find((device) => device.macAddress === data.macAddress);
+			if (stationData)
+			{
+				Object.assign(stationData, data);
+			}
+			else
+			{
+				this.homey.app.updateLog('Received realtime data');
+
+				// Add the new device data to the array so if a device is added later with this macAddress it can get the latest data.
+				this.subscribedDevices.push(data);
+			}
+			this.homey.app.updateLog(`Updated station data for macAddress ${data.macAddress}`);
+			this.homey.app.updateLog(`Station data: ${this.homey.app.varToString(stationData)}`);
+		}
+
 		const drivers = this.homey.drivers.getDrivers();
 		for (const driver of Object.values(drivers))
 		{
@@ -360,6 +409,61 @@ class MyApp extends Homey.App
 				}
 			}
 		}
+	}
+
+	async getStationData(apiKey, macAddress)
+	{
+		while (this.fetchingData)
+		{
+			this.homey.app.updateLog('waiting to fetch data');
+			await this.asyncDelay(500);
+		}
+
+		this.fetchingData = true;
+		let stationData = null;
+
+		try
+		{
+			// Check the data array to see if we have already fetched the data for this macAddress in the last 5 minutes to avoid hitting API rate limits.
+			stationData = this.subscribedDevices ? this.subscribedDevices.find((data) => data.macAddress === macAddress) : null;
+
+			// If we have the data but it's older than 5 minutes, remove it and fetch new data.
+			if (stationData && (!stationData.lastDataReceived || (Date.now() - new Date(stationData.lastDataReceived)) >= POLLING_INTERVAL))
+			{
+				this.subscribedDevices = this.subscribedDevices.filter((data) => data.macAddress !== macAddress);
+				stationData = null;
+			}
+
+			if (stationData)
+			{
+				this.homey.app.updateLog('Using cached station data');
+			}
+			else
+			{
+				stationData = await this.getAPIData(apiKey, macAddress);
+				if (stationData)
+				{
+					// Update the lastDataReceived to now since we are getting the data now.
+					stationData.lastDataReceived = new Date();
+					stationData.macAddress = macAddress;
+
+					// Add the new data to the array so if a device is added later with this macAddress it can get the latest data without needing to fetch it again.
+					this.subscribedDevices = this.subscribedDevices || [];
+					this.subscribedDevices.push(stationData);
+					this.homey.app.updateLog('Fetched new station data');
+					this.homey.app.updateLog(`Station data: ${this.homey.app.varToString(stationData)}`);
+				}
+			}
+		}
+		catch (err)
+		{
+			this.homey.app.updateLog(`Error fetching station data: ${err.message}`, true);
+			this.homey.app.updateLog(`Error details: ${this.homey.app.varToString(err)}`, true);
+		}
+
+		this.fetchingData = false;
+
+		return stationData;
 	}
 
 	varToString(source)
