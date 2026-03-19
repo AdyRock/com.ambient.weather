@@ -43,5 +43,8 @@
 	},
 	"1.0.14": {
 		"en": "Moved polling to the app and fixed update issue when more than one device is added."
+	},
+	"1.0.15": {
+		"en": "Put polling back to 5 minutes to keep within API rate limits."
 	}
 }

@@ -5,7 +5,7 @@ const Homey = require('homey');
 const nodemailer = require('nodemailer');
 const AmbientWeatherApi = require('ambient-weather-api');
 
-const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
+const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 if (process.env.DEBUG === '1')
 {
