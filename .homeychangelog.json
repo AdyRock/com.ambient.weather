@@ -1,50 +1,53 @@
 {
-    "1.0.0": {
-        "en": "First issue"
-    },
-    "1.0.1": {
-        "en": "Added button to open URL for the API Key"
-    },
-    "1.0.2": {
-        "en": "Changed target to Homey Pro only."
-    },
-    "1.0.3": {
-        "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
-    },
-    "1.0.4": {
-        "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
-    },
-    "1.0.5": {
-        "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
-    },
-    "1.0.6": {
-        "en": "Trap missing location when adding a device."
-    },
-    "1.0.7": {
-        "en": "Added last rained capability and Flow cards to station."
-    },
-	"1.0.8": {
-		"en": "Added extra validation to fix crashes on bad data."
-	},
-	"1.0.9": {
-		"en": "Fix error when PM2.5 reading is above highest value in the AQITable table."
-	},
-	"1.0.10": {
-		"en": "Ensure raw date is a string when date is converted."
-	},
-	"1.0.11": {
-		"en": "Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes."
-	},
-	"1.0.12": {
-		"en": "Increase polling time to 2 minutes to keep within API rate limits."
-	},
-	"1.0.13": {
-		"en": "Move diagnostic log to the app settings. Reuse AW API client to reduce number of connections. Increase polling time to 5 minutes plus a random delay of up to 30 seconds to keep within API rate limits."
-	},
-	"1.0.14": {
-		"en": "Moved polling to the app and fixed update issue when more than one device is added."
-	},
-	"1.0.15": {
-		"en": "Put polling back to 5 minutes to keep within API rate limits."
-	}
+  "1.0.0": {
+    "en": "First issue"
+  },
+  "1.0.1": {
+    "en": "Added button to open URL for the API Key"
+  },
+  "1.0.2": {
+    "en": "Changed target to Homey Pro only."
+  },
+  "1.0.3": {
+    "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
+  },
+  "1.0.4": {
+    "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
+  },
+  "1.0.5": {
+    "en": "Handle crash when PM2.5 goes offline. Setup Diagnostic log Maintenance action on all devices."
+  },
+  "1.0.6": {
+    "en": "Trap missing location when adding a device."
+  },
+  "1.0.7": {
+    "en": "Added last rained capability and Flow cards to station."
+  },
+  "1.0.8": {
+    "en": "Added extra validation to fix crashes on bad data."
+  },
+  "1.0.9": {
+    "en": "Fix error when PM2.5 reading is above highest value in the AQITable table."
+  },
+  "1.0.10": {
+    "en": "Ensure raw date is a string when date is converted."
+  },
+  "1.0.11": {
+    "en": "Setup / extend polling just in case we don't receive real time updates for some reason. This will ensure the device data is updated at least every 10 minutes."
+  },
+  "1.0.12": {
+    "en": "Increase polling time to 2 minutes to keep within API rate limits."
+  },
+  "1.0.13": {
+    "en": "Move diagnostic log to the app settings. Reuse AW API client to reduce number of connections. Increase polling time to 5 minutes plus a random delay of up to 30 seconds to keep within API rate limits."
+  },
+  "1.0.14": {
+    "en": "Moved polling to the app and fixed update issue when more than one device is added."
+  },
+  "1.0.15": {
+    "en": "Put polling back to 5 minutes to keep within API rate limits."
+  },
+  "1.0.16": {
+    "en": "Increased polling interval by 1 second so the cache is refreshed every 5 minutes."
+  }
 }
