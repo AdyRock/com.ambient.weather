@@ -243,7 +243,7 @@ class MyApp extends Homey.App
 		this.pollingInterval = this.homey.setInterval(() =>
 		{
 			this.pollData();
-		}, POLLING_INTERVAL);
+		}, POLLING_INTERVAL + 1000); // Add 1 second to avoid hitting the cache twice in a row.
 
 		this.log('MyApp has been initialized');
 	}
