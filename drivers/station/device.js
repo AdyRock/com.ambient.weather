@@ -49,7 +49,14 @@ class StationDevice extends AmbientDevice
 			let deviceData = stationData.lastData;
 			if (!deviceData)
 			{
-				deviceData = stationData[0];
+				if (Array.isArray(stationData))
+				{
+					deviceData = stationData[0];
+				}
+				else
+				{
+					deviceData = stationData;
+				}
 			}
 
 			if (deviceData)

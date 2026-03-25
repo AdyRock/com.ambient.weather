@@ -342,12 +342,28 @@ class MyApp extends Homey.App
 
 		apiInstance.on('data', (data) =>
 		{
-			this.homey.app.updateLog(`realtime data: ${this.homey.app.varToString(data)}`);
+			this.homey.app.updateLog(`Realtime data: ${this.homey.app.varToString(data)}`);
 
-			// call updateStationData for each device in the data array to update the devices with the new data.
-			data.devices.forEach((device) => {
-				this.updateStationData(device);
-			});
+			// Check if data is ana array of devices or a single device and call updateStationData for each device in the data array to update the devices with the new data.
+			if (data && data.macAddress)
+			{
+				this.updateStationData(data);
+			}
+			else if (data && data.device)
+			{
+				this.updateStationData(data.device);
+			}
+			else if (data && data.devices)
+			{
+				// If it's an array of devices, loop through the array and call updateStationData for each device in the data array to update the devices with the new data.
+				if (data && data.devices && data.devices.length > 0)
+				{
+					// call updateStationData for each device in the data array to update the devices with the new data.
+					data.devices.forEach((device) => {
+						this.updateStationData(device);
+					});
+				}
+			}
 		});
 
 		this.registeringRealTime = false;
@@ -383,17 +399,17 @@ class MyApp extends Homey.App
 			const stationData = this.subscribedDevices.find((device) => device.macAddress === data.macAddress);
 			if (stationData)
 			{
+				// Update the existing data with the new data. This will keep any existing properties that are not included in the new data and update any properties that are included in the new data.
+				this.homey.app.updateLog(`Updating station data for macAddress ${data.macAddress}`);
 				Object.assign(stationData, data);
 			}
 			else
 			{
-				this.homey.app.updateLog('Received realtime data');
+				this.homey.app.updateLog(`Received data for new device, adding to subscribedDevices array for macAddress ${data.macAddress}`);
 
-				// Add the new device data to the array so if a device is added later with this macAddress it can get the latest data.
+				// Add the new device data to the array so if a device is added later with this macAddress it can get the latest data without needing to fetch it again.
 				this.subscribedDevices.push(data);
 			}
-			this.homey.app.updateLog(`Updated station data for macAddress ${data.macAddress}`);
-			this.homey.app.updateLog(`Station data: ${this.homey.app.varToString(stationData)}`);
 		}
 
 		const drivers = this.homey.drivers.getDrivers();

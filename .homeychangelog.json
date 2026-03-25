@@ -49,5 +49,8 @@
   },
   "1.0.16": {
     "en": "Increased polling interval by 1 second so the cache is refreshed every 5 minutes."
+  },
+  "1.0.17": {
+	"en": "Adapted realtime data routine to cope with new format sent by Ambient Weather API."
   }
 }
