@@ -98,27 +98,22 @@ class LightningDevice extends AmbientDevice
 		this.log('Lightning Device has been deleted');
 	}
 
-	updateStationData(stationData, addRemove)
+	updateStationData(deviceData, addRemove)
 	{
-		if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
+		if (deviceData && (addRemove || (deviceData.macAddress === this.macAddress)))
 		{
-			const deviceData = stationData.lastData;
+			this.setCapability('measure_lightning', deviceData.lightning_distance, addRemove);
+			this.setCapability('measure_lightning_num', deviceData.lightning_day, addRemove);
 
-			if (deviceData)
+			const settings = this.getSettings();
+			if (deviceData.lightning_time !== '')
 			{
-				this.setCapability('measure_lightning', deviceData.lightning_distance, addRemove);
-				this.setCapability('measure_lightning_num', deviceData.lightning_day, addRemove);
-
-				const settings = this.getSettings();
-				if (deviceData.lightning_time !== '')
-				{
-					this.lightning_time = deviceData.lightning_time;
-					this.setStoreValue('lightning_time', this.lightning_time).catch(this.error);
-					this.setCapability('measure_lightning_time', this.convertDate(this.lightning_time, settings), addRemove);
-				}
-
-				this.setCapability('alarm_battery', deviceData.batt_lightning === 0, addRemove);
+				this.lightning_time = deviceData.lightning_time;
+				this.setStoreValue('lightning_time', this.lightning_time).catch(this.error);
+				this.setCapability('measure_lightning_time', this.convertDate(this.lightning_time, settings), addRemove);
 			}
+
+			this.setCapability('alarm_battery', deviceData.batt_lightning === 0, addRemove);
 		}
 	}
 

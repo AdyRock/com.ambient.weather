@@ -38,19 +38,14 @@ class SoilMoistureDevice extends AmbientDevice
         this.log('SoilMoistureDevice has been deleted');
     }
 
-    updateStationData(stationData, addRemove)
-    {
-        if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
-        {
-			const deviceData = stationData.lastData;
-
-			if (deviceData)
-			{
-				this.setCapability('measure_moisture', deviceData[`soilhum${this.deviceID}`], addRemove);
-				this.setCapability('measure_temperature', (deviceData[`soiltemp${this.deviceID}f`] !== undefined) ? (((deviceData[`soiltemp${this.deviceID}f`] - 32) * 5) / 9) : deviceData[`soiltemp${this.deviceID}f`], addRemove);
-				this.setCapability('alarm_battery', (deviceData[`battsm${this.deviceID}`] !== undefined) ? (deviceData[`battsm${this.deviceID}`] === 0) : deviceData[`battsm${this.deviceID}`], addRemove);
-			}
-        }
+	updateStationData(deviceData, addRemove)
+	{
+		if (deviceData && (addRemove || (deviceData.macAddress === this.macAddress)))
+		{
+			this.setCapability('measure_moisture', deviceData[`soilhum${this.deviceID}`], addRemove);
+			this.setCapability('measure_temperature', (deviceData[`soiltemp${this.deviceID}f`] !== undefined) ? (((deviceData[`soiltemp${this.deviceID}f`] - 32) * 5) / 9) : deviceData[`soiltemp${this.deviceID}f`], addRemove);
+			this.setCapability('alarm_battery', (deviceData[`battsm${this.deviceID}`] !== undefined) ? (deviceData[`battsm${this.deviceID}`] === 0) : deviceData[`battsm${this.deviceID}`], addRemove);
+		}
     }
 
 }

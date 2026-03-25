@@ -52,5 +52,8 @@
   },
   "1.0.17": {
 	"en": "Adapted realtime data routine to cope with new format sent by Ambient Weather API."
+  },
+  "1.0.18": {
+	"en": "Fix for new data formatting for other devices."
   }
 }

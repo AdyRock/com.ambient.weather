@@ -344,6 +344,14 @@ class MyApp extends Homey.App
 		{
 			this.homey.app.updateLog(`Realtime data: ${this.homey.app.varToString(data)}`);
 
+			// As we have realtime data coming in we can stop polling
+			if (this.pollingInterval)
+			{
+				this.homey.clearInterval(this.pollingInterval);
+				this.pollingInterval = null;
+				this.homey.app.updateLog('Cleared polling timer as we have realtime data');
+			}
+
 			// Check if data is ana array of devices or a single device and call updateStationData for each device in the data array to update the devices with the new data.
 			if (data && data.macAddress)
 			{
@@ -389,26 +397,44 @@ class MyApp extends Homey.App
 
 	updateStationData(data)
 	{
-		// Check the data array to see if we have already fetched the data for this macAddress and update the data for the devices with the new data.
-		if (data && data.macAddress)
+		let deviceData = data.lastData;
+		if (!deviceData)
 		{
-			// add the lastDataReceived timestamp to the data so we know when we received the last update for this device.
-			data.lastDataReceived = new Date();
-
-			// Update the data in the array so if a device is added later with this macAddress it can get the latest data without needing to fetch it again.
-			const stationData = this.subscribedDevices.find((device) => device.macAddress === data.macAddress);
-			if (stationData)
+			if (Array.isArray(data))
 			{
-				// Update the existing data with the new data. This will keep any existing properties that are not included in the new data and update any properties that are included in the new data.
-				this.homey.app.updateLog(`Updating station data for macAddress ${data.macAddress}`);
-				Object.assign(stationData, data);
+				deviceData = data[0];
 			}
 			else
 			{
-				this.homey.app.updateLog(`Received data for new device, adding to subscribedDevices array for macAddress ${data.macAddress}`);
+				deviceData = data;
+			}
+		}
+
+		if (data.macAddress && !deviceData.macAddress)
+		{
+			deviceData.macAddress = data.macAddress;
+		}
+
+		// Check the data array to see if we have already fetched the data for this macAddress and update the data for the devices with the new data.
+		if (deviceData && deviceData.macAddress)
+		{
+			// add the lastDataReceived timestamp to the data so we know when we received the last update for this device.
+			deviceData.lastDataReceived = new Date();
+
+			// Update the data in the array so if a device is added later with this macAddress it can get the latest data without needing to fetch it again.
+			const stationData = this.subscribedDevices.find((device) => device.macAddress === deviceData.macAddress);
+			if (stationData)
+			{
+				// Update the existing data with the new data. This will keep any existing properties that are not included in the new data and update any properties that are included in the new data.
+				this.homey.app.updateLog(`Updating station data for macAddress ${deviceData.macAddress}`);
+				Object.assign(stationData, deviceData);
+			}
+			else
+			{
+				this.homey.app.updateLog(`Received data for new device, adding to subscribedDevices array for macAddress ${deviceData.macAddress}`);
 
 				// Add the new device data to the array so if a device is added later with this macAddress it can get the latest data without needing to fetch it again.
-				this.subscribedDevices.push(data);
+				this.subscribedDevices.push(deviceData);
 			}
 		}
 
@@ -421,7 +447,7 @@ class MyApp extends Homey.App
 				// const device = devices[i];
 				if (device.updateStationData)
 				{
-					device.updateStationData(data, false);
+					device.updateStationData(deviceData, false);
 				}
 			}
 		}

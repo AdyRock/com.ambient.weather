@@ -36,21 +36,16 @@ class TemperatureDevice extends AmbientDevice
 		this.log('TemperatureDevice has been deleted');
 	}
 
-	updateStationData(stationData, addRemove)
+	updateStationData(deviceData, addRemove)
 	{
-		if (stationData && (addRemove || (stationData.macAddress === this.macAddress)))
+		if (deviceData && (addRemove || (deviceData.macAddress === this.macAddress)))
 		{
-			const deviceData = stationData.lastData;
+			// eslint-disable-next-line max-len
+			this.setCapability('measure_temperature', (deviceData[`temp${this.deviceID}f`] !== undefined) ? (((deviceData[`temp${this.deviceID}f`] - 32) * 5) / 9) : deviceData[`temp${this.deviceID}f`], addRemove);
+			this.setCapability('measure_humidity', deviceData[`humidity${this.deviceID}`], addRemove);
+			this.setCapability('measure_pressure', (deviceData.baromrelin !== undefined) ? deviceData.baromrelin * 33.8639 : deviceData.baromrelin, addRemove);
 
-			if (deviceData)
-			{
-				// eslint-disable-next-line max-len
-				this.setCapability('measure_temperature', (deviceData[`temp${this.deviceID}f`] !== undefined) ? (((deviceData[`temp${this.deviceID}f`] - 32) * 5) / 9) : deviceData[`temp${this.deviceID}f`], addRemove);
-				this.setCapability('measure_humidity', deviceData[`humidity${this.deviceID}`], addRemove);
-				this.setCapability('measure_pressure', (deviceData.baromrelin !== undefined) ? deviceData.baromrelin * 33.8639 : deviceData.baromrelin, addRemove);
-
-				this.setCapability('alarm_battery', (deviceData[`batt${this.deviceID}`] !== undefined) ? (deviceData[`batt${this.deviceID}`] === 0) : deviceData[`batt${this.deviceID}`], addRemove);
-			}
+			this.setCapability('alarm_battery', (deviceData[`batt${this.deviceID}`] !== undefined) ? (deviceData[`batt${this.deviceID}`] === 0) : deviceData[`batt${this.deviceID}`], addRemove);
 		}
 	}
 
